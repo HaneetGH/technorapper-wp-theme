@@ -1,0 +1,25 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+$lead = !empty($args['lead']);
+$img  = technorapper_first_image();
+$cats = get_the_category();
+$desk = $cats ? $cats[0]->name : '';
+$class = 'card';
+if ($lead && $img) {
+    $class .= ' lead';
+} elseif (!$img) {
+    $class .= ' textonly';
+}
+?>
+<a class="<?php echo esc_attr($class); ?>" href="<?php the_permalink(); ?>">
+  <?php if ($img) : ?>
+    <span class="pic"><img src="<?php echo esc_url($img); ?>" alt=""></span>
+  <?php endif; ?>
+  <span class="copy">
+    <span class="beat"><?php echo esc_html(trim($desk . ' · ' . get_the_date('j M Y'), ' ·')); ?></span>
+    <strong><?php the_title(); ?></strong>
+    <span class="line"><?php echo esc_html(wp_trim_words(wp_strip_all_tags(get_the_excerpt()), 28)); ?></span>
+  </span>
+</a>
