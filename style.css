@@ -1,13 +1,17 @@
 /*
 Theme Name: TechnoRapper
-Theme URI: https://technorapper.com
+Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
-Description: Custom TechnoRapper theme. Photo board, AI desk, live archive, and the existing permalinks and RSS feed.
-Version: 1.0.8
+Author URI: https://technorapper.com
+Description: Open-source magazine theme with a photo board homepage, desk rail, paged archives, story pages, and built-in ad slots.
+Version: 1.1.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: technorapper
+Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, translation-ready
 */
 
 :root {
@@ -279,6 +283,23 @@ Text Domain: technorapper
     .permalink { border-top: 1px solid var(--line); padding-top: 12px; color: var(--muted); font-size: 14px; word-break: break-all; }
     .permalink a { color: var(--accent); text-decoration: underline; }
     .ad { width: 300px; max-width: 100%; min-height: 0; overflow: hidden; line-height: 0; background: transparent; border: 0; }
+    .ad.placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 250px;
+      border: 1px dashed var(--line);
+      background: var(--card);
+      color: var(--muted);
+      text-align: center;
+      padding: 16px;
+      line-height: 1.35;
+    }
+    .ad.placeholder.banner { width: 100%; min-height: 90px; }
+    .ad.placeholder span { color: var(--ink); letter-spacing: 0.12em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+    .ad.placeholder small { font-size: 12px; }
     .more { margin-top: 16px; background: var(--card); border: 1px solid var(--line); }
     .more a { display: block; padding: 10px 12px; border-top: 1px solid var(--line); }
     .contact { max-width: 560px; background: var(--card); border: 1px solid var(--line); padding: 18px; }

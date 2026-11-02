@@ -1,17 +1,97 @@
-# TechnoRapper WordPress theme
+# TechnoRapper
 
-Custom classic theme for [technorapper.com](https://technorapper.com). Photo board homepage, AI desk, paged archives, and story pages.
+Open-source WordPress magazine theme: a photo board homepage, desk rail, paged archives, story pages, and built-in ad slots.
 
-![TechnoRapper homepage](screenshot.png)
+![Homepage](screenshot.png)
 
-Old post URLs and `/feed/` stay on WordPress permalinks. Do not change the permalink structure when you activate this theme.
+GPL v2 or later. Use it on your own news or review site, fork it, and ship ads from your own account.
+
+## Features
+
+- Photo-board front page with image-led stories
+- Desk rail built from your categories
+- Paged archives, search, and single posts
+- RSS at `/feed/` and normal WordPress permalinks
+- Ad slots on home, archives, the sidebar, and under posts
+- No bundled ad account — each site pastes its own client and slot IDs
+
+## Requirements
+
+- WordPress 6.0+
+- PHP 7.4+
 
 ## Install
 
-1. Backup the live site.
-2. Upload this folder to `wp-content/themes/technorapper`, or zip the contents and use Appearance → Themes → Add New → Upload Theme.
-3. Assign the current primary menu (Apple, AI, Android, …) to **Primary**.
-4. Activate only when you are ready to leave CoverNews.
-5. Settings → Permalinks → Save (do not change the structure).
-6. Confirm `/category/ai/`, an old article URL, and `/feed/`.
-7. Ad units are set in **Appearance → Customize → Ads**, not in the theme files.
+1. Download the repo as a zip, or clone it into `wp-content/themes/technorapper`.
+2. In **Appearance → Themes**, activate **TechnoRapper**.
+3. **Appearance → Menus**: create a menu and assign it to **Primary**.
+4. **Settings → Permalinks → Save** (keep your existing structure).
+5. **Appearance → Customize → Ads** to connect units, or leave them empty to show placeholders.
+
+Folder name should stay `technorapper`.
+
+## Ads
+
+The theme reserves these slots:
+
+| Placement | Where | Customizer field |
+| --- | --- | --- |
+| Banner | Home, under the photo board; also on archives and pages | In-article slot |
+| Sidebar | Home rail and story sidebar | Sidebar slot |
+| In-article | After the second paragraph and at the end of a post | In-article slot |
+
+1. Open **Appearance → Customize → Ads**.
+2. Paste your ad client (`ca-pub-…`) and the two slot IDs from your ad account.
+3. Publish. Units fill on your live domain (they will not fill on `localhost`).
+4. Check **Hide ad placeholders** if you want empty slots hidden until IDs are set.
+
+Google Site Kit can stay active; the theme will not load a second ads script when Site Kit is present.
+
+Developers can also supply values in a small must-use plugin:
+
+```php
+add_filter('technorapper_adsense_client', function () {
+    return 'ca-pub-xxxxxxxxxxxxxxxx';
+});
+add_filter('technorapper_adsense_slot_box', function () {
+    return '1234567890';
+});
+add_filter('technorapper_adsense_slot_article', function () {
+    return '1234567890';
+});
+```
+
+Do not commit real account IDs to a public fork.
+
+## Desks
+
+Desks are category rails (Apple, AI, and so on on technorapper.com).
+
+**Appearance → Customize → Desks** accepts a comma-separated list of category slugs, in order:
+
+```
+apple, ai, android, auto
+```
+
+If you leave that empty, the theme uses those default slugs when they exist, otherwise your eight busiest categories.
+
+## Menus and widgets
+
+- **Primary** — top section nav
+- **Footer** — optional; otherwise the theme prints desks and matching pages
+- **Main Sidebar** — extra widgets under the sidebar ad
+- **In-story advertisement** — optional widget under a post
+
+## File map
+
+```
+header.php / footer.php
+front-page.php          photo board + banner + desks + latest
+single.php              story + sidebar ad
+archive.php / category.php / search.php
+template-parts/         board, rail, feed, card
+```
+
+## License
+
+[GPL-2.0-or-later](LICENSE). You may copy, change, and redistribute this theme. Keep the license notice in `style.css`.

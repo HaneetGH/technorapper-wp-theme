@@ -46,7 +46,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_template_directory_uri() . '/style.min.css', array(), '1.0.8');
+    wp_enqueue_style('technorapper', get_template_directory_uri() . '/style.min.css', array(), '1.1.0');
     $client = technorapper_adsense_client();
     if ($client === '' || class_exists('Google\\Site_Kit\\Plugin')) {
         return;
@@ -82,7 +82,20 @@ function technorapper_desk_term($slug)
 
 function technorapper_desks()
 {
-    return array(
+    $custom = trim((string) get_theme_mod('desk_slugs', ''));
+    if ($custom !== '') {
+        $desks = array();
+        foreach (explode(',', $custom) as $slug) {
+            $term = technorapper_desk_term(sanitize_title(trim($slug)));
+            if ($term) {
+                $desks[] = array($term->slug, $term->name);
+            }
+        }
+        if ($desks) {
+            return $desks;
+        }
+    }
+    $defaults = array(
         array('apple', 'Apple'),
         array('ai', 'AI'),
         array('android', 'Android'),
@@ -92,6 +105,25 @@ function technorapper_desks()
         array('guides', 'Guides'),
         array('tech', 'News'),
     );
+    $desks = array();
+    foreach ($defaults as $desk) {
+        if (technorapper_desk_term($desk[0])) {
+            $desks[] = $desk;
+        }
+    }
+    if ($desks) {
+        return $desks;
+    }
+    $cats = get_categories(array(
+        'orderby'    => 'count',
+        'order'      => 'DESC',
+        'number'     => 8,
+        'hide_empty' => true,
+    ));
+    foreach ($cats as $cat) {
+        $desks[] = array($cat->slug, $cat->name);
+    }
+    return $desks;
 }
 
 function technorapper_first_image($post = null)
@@ -291,19 +323,32 @@ function technorapper_adsense_slot($which)
     return preg_replace('/[^0-9]/', '', (string) $slot);
 }
 
+function technorapper_ad_placeholder($kind = 'box')
+{
+    if (get_theme_mod('hide_ad_placeholders')) {
+        return '';
+    }
+    $class = ($kind === 'banner' || $kind === 'inarticle') ? 'ad banner placeholder' : 'ad placeholder';
+    $html  = '<aside class="' . esc_attr($class) . '" aria-label="Advertisement">';
+    $html .= '<span>Advertisement</span>';
+    $html .= '<small>Set your ads in Appearance → Customize → Ads</small>';
+    $html .= '</aside>';
+    return $html;
+}
+
 function technorapper_ad_markup($slot, $kind = 'box')
 {
     $client = technorapper_adsense_client();
     $slot = preg_replace('/[^0-9]/', '', (string) $slot);
-    if ($client === '' || $slot === '') {
-        return '';
-    }
     $class = ($kind === 'banner' || $kind === 'inarticle') ? 'ad banner' : 'ad';
-    $html  = '<aside class="' . esc_attr($class) . '">';
-    $html .= '<ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="' . esc_attr($client) . '" data-ad-slot="' . esc_attr($slot) . '" data-ad-format="auto" data-full-width-responsive="true"></ins>';
-    $html .= '<script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>';
-    $html .= '</aside>';
-    return $html;
+    if ($client !== '' && $slot !== '') {
+        $html  = '<aside class="' . esc_attr($class) . '">';
+        $html .= '<ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="' . esc_attr($client) . '" data-ad-slot="' . esc_attr($slot) . '" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+        $html .= '<script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>';
+        $html .= '</aside>';
+        return $html;
+    }
+    return technorapper_ad_placeholder($kind);
 }
 
 function technorapper_ad_unit($slot, $kind = 'box')
@@ -331,11 +376,13 @@ function technorapper_content_ads($content)
     if (is_admin() || is_feed() || !is_singular('post') || !in_the_loop() || !is_main_query()) {
         return $content;
     }
-    $mid = technorapper_ad_markup(technorapper_adsense_slot('article'), 'inarticle');
-    $end = technorapper_ad_markup(technorapper_adsense_slot('article'), 'inarticle');
-    if ($mid === '') {
-        return $content;
+    $slot = technorapper_adsense_slot('article');
+    $live = technorapper_adsense_client() !== '' && $slot !== '';
+    $end  = $live ? technorapper_ad_markup($slot, 'inarticle') : technorapper_ad_placeholder('inarticle');
+    if (!$live) {
+        return $content . $end;
     }
+    $mid = technorapper_ad_markup($slot, 'inarticle');
     $parts = preg_split('/<\/p>/i', $content, 3);
     if (count($parts) >= 3) {
         $content = $parts[0] . '</p>' . $parts[1] . '</p>' . $mid . $parts[2];
@@ -344,19 +391,21 @@ function technorapper_content_ads($content)
 }
 add_filter('the_content', 'technorapper_content_ads', 30);
 
-function technorapper_customize_ads($wp_customize)
+function technorapper_customize_register($wp_customize)
 {
     $wp_customize->add_section('technorapper_ads', array(
-        'title' => 'Ads',
+        'title'       => 'Ads',
+        'description' => 'Paste your own ad client and slot IDs. Leave them empty to show labeled placeholders.',
     ));
     $wp_customize->add_setting('adsense_client', array(
         'default'           => '',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('adsense_client', array(
-        'label'   => 'Ad client',
-        'section' => 'technorapper_ads',
-        'type'    => 'text',
+        'label'       => 'Ad client',
+        'description' => 'Example: ca-pub-xxxxxxxxxxxxxxxx',
+        'section'     => 'technorapper_ads',
+        'type'        => 'text',
     ));
     foreach (array('box' => 'Sidebar slot', 'article' => 'In-article slot') as $key => $label) {
         $id = 'adsense_slot_' . $key;
@@ -370,8 +419,30 @@ function technorapper_customize_ads($wp_customize)
             'type'    => 'text',
         ));
     }
+    $wp_customize->add_setting('hide_ad_placeholders', array(
+        'default'           => false,
+        'sanitize_callback' => 'wp_validate_boolean',
+    ));
+    $wp_customize->add_control('hide_ad_placeholders', array(
+        'label'   => 'Hide ad placeholders until units are connected',
+        'section' => 'technorapper_ads',
+        'type'    => 'checkbox',
+    ));
+    $wp_customize->add_section('technorapper_desks', array(
+        'title' => 'Desks',
+    ));
+    $wp_customize->add_setting('desk_slugs', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('desk_slugs', array(
+        'label'       => 'Desk category slugs',
+        'description' => 'Comma-separated category slugs, in order. Leave empty to use matching defaults or your busiest categories.',
+        'section'     => 'technorapper_desks',
+        'type'        => 'text',
+    ));
 }
-add_action('customize_register', 'technorapper_customize_ads');
+add_action('customize_register', 'technorapper_customize_register');
 
 function technorapper_assign_menus()
 {
@@ -382,7 +453,7 @@ function technorapper_assign_menus()
     $menus = wp_get_nav_menus();
     foreach ($menus as $menu) {
         $name = strtolower($menu->name . ' ' . $menu->slug);
-        if ((int) $menu->term_id === 8 || strpos($name, 'primary') !== false || strpos($name, 'main') !== false) {
+        if (strpos($name, 'primary') !== false || strpos($name, 'main') !== false) {
             $locations['primary'] = (int) $menu->term_id;
             set_theme_mod('nav_menu_locations', $locations);
             break;
