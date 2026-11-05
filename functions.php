@@ -48,7 +48,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.1.1');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.2.0');
     $client = technorapper_adsense_client();
     if ($client === '' || class_exists('Google\\Site_Kit\\Plugin')) {
         return;
