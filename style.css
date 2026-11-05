@@ -6,7 +6,7 @@ Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, paged archives, story pages, and built-in ad slots.
 Version: 1.1.0
 Requires at least: 6.0
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -25,7 +25,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       --bar: #16122b;
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; overflow-x: hidden; }
+    html, body { margin: 0; overflow-x: clip; }
     body {
       background: var(--paper);
       color: var(--ink);
@@ -36,9 +36,9 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     button, input { font: inherit; }
     a { color: inherit; text-decoration: none; }
     a:hover { color: var(--accent); }
-    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    img { display: block; max-width: 100%; height: auto; }
     .wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
-    header { background: var(--bar); color: #fff; position: sticky; top: 0; z-index: 5; }
+    .site-header { background: var(--bar); color: #fff; position: sticky; top: 0; z-index: 5; }
     .utils { color: #a99fbf; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
     .utils .wrap { display: flex; justify-content: space-between; padding-top: 8px; padding-bottom: 0; }
     .utils a { color: var(--accent-bright); }
@@ -72,7 +72,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     .nav .wrap { display: flex; gap: 18px; overflow-x: auto; align-items: center; }
     .nav a { color: #d9d2ea; font-weight: 600; font-size: 14px; padding: 12px 0; white-space: nowrap; border-bottom: 2px solid transparent; }
     .nav a[aria-current="page"], .nav a:hover { color: #fff; border-bottom-color: var(--accent-bright); }
-    main { padding: 22px 0 48px; }
+    .site-header + main { padding: 22px 0 48px; }
     .board {
       display: grid;
       grid-template-columns: 1.5fr 1fr 1fr;
@@ -153,7 +153,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     .desk-link:hover .name { color: var(--accent); }
     .track { margin: 0; }
     .feed { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 16px; align-items: start; }
-    .card { display: flex; flex-direction: column; min-width: 0; color: inherit; }
+    .card { display: flex; flex-direction: column; min-width: 0; color: inherit; }\n    .card-link { display: flex; flex-direction: column; min-width: 0; color: inherit; }
     .card .pic { display: block; aspect-ratio: 16 / 10; background: #241c40; overflow: hidden; }
     .card .copy { display: block; padding-top: 8px; }
     .card strong { display: block; margin-top: 4px; font-size: 17px; line-height: 1.25; }
@@ -167,8 +167,8 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       font-size: 14px;
       line-height: 1.4;
     }
-    .card:hover { color: inherit; }
-    .card:hover strong { color: var(--accent); }
+    .card:hover, .card-link:hover { color: inherit; }
+    .card:hover strong, .card-link:hover strong { color: var(--accent); }
     .card.lead {
       grid-column: 1 / -1;
       display: flex;
@@ -313,9 +313,9 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     .page-body img, .body img { width: 100%; height: auto; margin: 12px 0; }
     .page-body ul, .page-body ol { margin: 0 0 14px; padding-left: 1.2em; }
     .ad .slot { font-family: ui-monospace, Menlo, monospace; font-size: 11px; margin-top: 6px; }
-    footer { background: var(--bar); color: #cfc6e4; }
-    footer .wrap { padding: 22px 20px 28px; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
-    footer nav {
+    .site-footer { background: var(--bar); color: #cfc6e4; }
+     .site- .site-footer .wrap { padding: 22px 20px 28px; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+    .site-footer nav {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -324,10 +324,10 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       min-width: 0;
       max-width: 860px;
     }
-    footer ul, footer li { list-style: none; margin: 0; padding: 0; }
-    footer a { color: #fff; }
-    footer a:hover { color: var(--accent-bright); }
-    footer .copy { margin: 0; white-space: nowrap; color: #cfc6e4; }
+    .site-footer ul, .site-footer li { list-style: none; margin: 0; padding: 0; }
+    .site-footer a { color: #fff; }
+    .site-footer a:hover { color: var(--accent-bright); }
+    .site-footer .copy { margin: 0; white-space: nowrap; color: #cfc6e4; }
     @media (max-width: 980px) {
       .wrap { padding: 0 16px; }
       .mast { flex-wrap: wrap; }
@@ -365,7 +365,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       .pg, .jump button, .more-btn { padding: 8px 10px; }
       .jump { flex-wrap: wrap; }
       .article h1 { font-size: 24px; }
-      footer .wrap { padding: 18px 12px 24px; }
+      .site-footer .wrap { padding: 18px 12px 24px; }
     }
 
 /* WordPress chrome */
@@ -389,3 +389,52 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
 .ad ins.adsbygoogle { margin: 0 auto; max-width: 100%; }
 ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
 .ad:has(> ins[data-ad-status="unfilled"]) { display: none !important; }
+
+
+/* 1.1.1 accessibility and scoped WordPress chrome */
+.site-header a:focus-visible,
+.site-footer a:focus-visible,
+.card-link:focus-visible,
+.desk-link:focus-visible,
+.find button:focus-visible,
+.find input:focus-visible,
+.nav a:focus-visible {
+  outline: 3px solid var(--accent-bright);
+  outline-offset: 3px;
+}
+.card-link { text-decoration: none; }
+.card .pic img,
+.tile img,
+.article .photo img,
+.result .photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.page-body img,
+.body img,
+.widget img,
+.wp-block-image img,
+.wp-caption img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+.page-body,
+.body { overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: no-preference) {
+  .tile img,
+  .card .pic img { transition: transform 220ms ease; }
+  .tile:hover img,
+  .card-link:hover .pic img { transform: scale(1.025); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
