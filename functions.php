@@ -50,7 +50,7 @@ function technorapper_assets()
 {
     wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.2.0');
     $client = technorapper_adsense_client();
-    if ($client === '' || class_exists('Google\\Site_Kit\\Plugin')) {
+    if ($client === '') {
         return;
     }
     wp_enqueue_script(
@@ -316,6 +316,12 @@ add_filter('the_content', 'technorapper_content_img_alts', 20);
 function technorapper_adsense_client()
 {
     $client = apply_filters('technorapper_adsense_client', get_theme_mod('adsense_client', ''));
+    if ($client === '') {
+        $settings = get_option('googlesitekit_adsense_settings', array());
+        if (is_array($settings) && !empty($settings['clientID'])) {
+            $client = (string) $settings['clientID'];
+        }
+    }
     return preg_replace('/[^a-z0-9-]/i', '', (string) $client);
 }
 
