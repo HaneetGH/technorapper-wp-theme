@@ -8,7 +8,7 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <a class="skip" href="#content">Skip to content</a>
-<header>
+<header class="site-header">
   <div class="utils">
     <div class="wrap">
       <span><?php echo esc_html(wp_date('l, j F Y')); ?></span>
@@ -17,13 +17,13 @@
   </div>
   <div class="wrap mast">
     <a class="home-btn" href="<?php echo esc_url(home_url('/')); ?>">Home</a>
-    <a class="brand" href="<?php echo esc_url(home_url('/')); ?>">
+    <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
       <span>
         <span class="wordmark">Techno<em>Rapper</em></span>
-        <span class="tag">All about the tech world · since 2012</span>
+        <span class="tag">Technology news, reviews &amp; guides · since 2012</span>
       </span>
     </a>
-    <form class="find" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+    <form class="find" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
       <label class="screen-reader-text" for="s">Search stories</label>
       <input id="s" type="search" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="Search stories">
       <button type="submit">Search</button>
