@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, paged archives, story pages, and built-in ad slots.
-Version: 1.1.1
+Version: 1.2.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -448,3 +448,35 @@ ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
   height: 100%;
   object-fit: cover;
 }
+
+/* 1.2.0 editorial homepage */
+.home-shell{max-width:1160px;margin:0 auto;padding:0 20px 56px}
+.home-hero{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.85fr);gap:14px}
+.hero-main{background:var(--bar);color:#fff;min-width:0}.hero-main-link{display:grid;grid-template-rows:auto auto;height:100%;color:#fff}
+.hero-media{aspect-ratio:16/9;overflow:hidden;background:#241c40}.hero-media img{width:100%;height:100%;object-fit:cover}
+.hero-copy{padding:22px 24px 24px}.hero-copy h1{font-size:clamp(30px,4vw,50px);line-height:1.02;margin:6px 0 12px;letter-spacing:-.045em}
+.hero-copy p{max-width:68ch;color:#cfc6e4;margin:0 0 14px;font-family:Georgia,"Iowan Old Style",Palatino,serif;font-size:16px;line-height:1.5}
+.hero-meta{color:#9f96b8;font-family:ui-monospace,Menlo,monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.hero-main-link:hover{color:#fff}.hero-main-link:hover h1{color:var(--accent-bright)}
+.hero-side{display:grid;grid-template-rows:repeat(3,1fr);gap:14px}.hero-side-card{background:var(--card);border:1px solid var(--line);min-width:0}
+.hero-side-card>a{display:grid;grid-template-columns:40% 60%;min-height:0;height:100%}.hero-side-media{min-height:0;overflow:hidden;background:#241c40}
+.hero-side-media img{width:100%;height:100%;object-fit:cover}.hero-side-copy{padding:14px;display:flex;flex-direction:column;min-width:0}
+.hero-side-copy h2{font-size:18px;line-height:1.15;margin:5px 0 8px}.hero-side-copy time{margin-top:auto;color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:11px}
+.hero-side-card:hover h2{color:var(--accent)}.home-ad{min-height:0;margin:18px 0 28px}
+.latest-section,.home-section{margin-top:42px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
+.section-kicker{display:block;color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
+.section-head h2{font-size:28px;line-height:1}.section-more{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.section-more:hover{color:var(--accent)}.latest-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
+.latest-item{border-bottom:1px solid var(--line);padding:14px 0}.latest-item>a{display:grid;grid-template-columns:190px minmax(0,1fr);gap:16px}
+.latest-thumb{aspect-ratio:16/10;overflow:hidden;background:#241c40}.latest-thumb img{width:100%;height:100%;object-fit:cover}
+.latest-item h3{font-size:19px;line-height:1.16;margin:4px 0 5px}.latest-item p{color:var(--muted);margin:0 0 7px;font-family:Georgia,"Iowan Old Style",Palatino,serif;font-size:14px;line-height:1.4}
+.latest-item time,.home-card-copy time{color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:.04em}.latest-item:hover h3{color:var(--accent)}
+.home-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.home-card{min-width:0}.home-card-link{display:block;color:inherit}
+.home-card-media{aspect-ratio:4/2.55;overflow:hidden;background:#241c40}.home-card-media img{width:100%;height:100%;object-fit:cover}
+.home-card-placeholder{display:block;width:100%;height:100%;background:linear-gradient(135deg,#241c40,#5b4dff);opacity:.35}.home-card-copy{padding-top:9px}
+.home-card-copy h3{font-size:17px;line-height:1.2;margin:4px 0 6px}.home-card-copy p{color:var(--muted);font-family:Georgia,"Iowan Old Style",Palatino,serif;font-size:13px;line-height:1.35;margin:0 0 8px}
+.home-card:hover h3{color:var(--accent)}.home-newsletter{margin-top:48px;padding:24px 26px;background:var(--bar);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.home-newsletter h2{font-size:27px;margin:4px 0 5px}.home-newsletter p{color:#bcb3cf;margin:0;max-width:60ch}.home-newsletter>a{background:var(--accent);color:#fff;padding:11px 15px;font-weight:800;white-space:nowrap}
+.home-newsletter>a:hover{color:#fff;background:#4636e0}
+@media(max-width:980px){.home-shell{padding-left:16px;padding-right:16px}.home-hero{grid-template-columns:1fr}.hero-side{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr}.hero-side-card>a{grid-template-columns:1fr}.hero-side-media{aspect-ratio:16/10}.hero-side-copy h2{font-size:15px}.home-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.latest-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.home-shell{padding-left:12px;padding-right:12px}.hero-copy{padding:17px 16px 19px}.hero-copy h1{font-size:31px}.hero-side{grid-template-columns:1fr;grid-template-rows:repeat(3,auto)}.hero-side-card>a{grid-template-columns:35% 65%;min-height:120px}.hero-side-media{aspect-ratio:auto}.section-head h2{font-size:24px}.latest-item>a{grid-template-columns:110px minmax(0,1fr);gap:12px}.latest-item h3{font-size:16px}.latest-item p{display:none}.home-cards{grid-template-columns:1fr 1fr;gap:18px 12px}.home-card-copy h3{font-size:15px}.home-newsletter{flex-direction:column;align-items:flex-start}}
