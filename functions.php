@@ -10,7 +10,9 @@ function technorapper_setup()
     add_theme_support('automatic-feed-links');
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script', 'navigation-widgets'));
     add_theme_support('responsive-embeds');
-    set_post_thumbnail_size(1160, 680, true);\n    add_image_size('technorapper-card', 720, 450, true);\n    add_image_size('technorapper-hero', 1160, 720, true);
+    set_post_thumbnail_size(1160, 680, true);
+    add_image_size('technorapper-card', 720, 450, true);
+    add_image_size('technorapper-hero', 1160, 720, true);
     register_nav_menus(array(
         'primary' => 'Primary',
         'footer'  => 'Footer',
