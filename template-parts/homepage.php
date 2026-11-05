@@ -1,27 +1,68 @@
 <?php
-if (!defined('ABSPATH')) { exit; }
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 $GLOBALS['technorapper_home_used_ids'] = array();
+
+/**
+ * Prefer AI Wire's explicitly curated homepage pool. Older imported posts
+ * are allowed only as a fallback when a curated desk has too few stories.
+ */
+function technorapper_home_posts($args = array(), $allow_fallback = true)
+{
+    $base = array(
+        'post_type'           => 'post',
+        'post_status'         => 'publish',
+        'ignore_sticky_posts' => true,
+        'no_found_rows'       => true,
+        'orderby'             => 'date',
+        'order'               => 'DESC',
+    );
+    $query = wp_parse_args($args, $base);
+    $curated = wp_parse_args(array(
+        'meta_key'   => '_tr_ai_wire_show_on_home',
+        'meta_value' => '1',
+    ), $query);
+    $posts = get_posts($curated);
+
+    if (!$allow_fallback || count($posts) >= (int) ($query['posts_per_page'] ?? 1)) {
+        return $posts;
+    }
+
+    $fallback = get_posts($query);
+    if (!$fallback) {
+        return $posts;
+    }
+
+    $seen = array_map('intval', wp_list_pluck($posts, 'ID'));
+    foreach ($fallback as $post) {
+        if (!in_array((int) $post->ID, $seen, true)) {
+            $posts[] = $post;
+        }
+        if (count($posts) >= (int) ($query['posts_per_page'] ?? 1)) {
+            break;
+        }
+    }
+    return $posts;
+}
 
 function technorapper_home_section($slug, $label, $limit = 4)
 {
     $term = technorapper_desk_term($slug);
-    if (!$term) { return; }
+    if (!$term) {
+        return;
+    }
 
     $used = !empty($GLOBALS['technorapper_home_used_ids']) ? $GLOBALS['technorapper_home_used_ids'] : array();
-    $posts = get_posts(array(
-        'post_type' => 'post',
-        'post_status' => 'publish',
-        'posts_per_page' => $limit,
-        'category' => $term->term_id,
-        'post__not_in' => $used,
-        'ignore_sticky_posts' => true,
-        'no_found_rows' => true,
+    $posts = technorapper_home_posts(array(
+        'posts_per_page'      => $limit,
+        'category'            => $term->term_id,
+        'post__not_in'        => $used,
     ));
-    if (!$posts) { return; }
 
-    foreach ($posts as $used_post) {
-        $GLOBALS['technorapper_home_used_ids'][] = (int) $used_post->ID;
+    if (!$posts) {
+        return;
     }
     ?>
     <section class="home-section">
@@ -55,42 +96,47 @@ function technorapper_home_section($slug, $label, $limit = 4)
       </div>
     </section>
     <?php
+    foreach ($posts as $used_post) {
+        $GLOBALS['technorapper_home_used_ids'][] = (int) $used_post->ID;
+    }
 }
 
-$hero_posts = get_posts(array(
-    'post_type' => 'post',
-    'post_status' => 'publish',
-    'posts_per_page' => 5,
-    'ignore_sticky_posts' => true,
-    'no_found_rows' => true,
-));
+$hero_posts = technorapper_home_posts(array(
+    'posts_per_page' => 13,
+), false);
+
 $hero = $hero_posts ? $hero_posts[0] : null;
 $side = array();
-
 foreach (array('apple', 'ai', 'android') as $side_slug) {
     $side_term = technorapper_desk_term($side_slug);
-    if (!$side_term) { continue; }
-    $side_posts = get_posts(array(
-        'post_type' => 'post',
-        'post_status' => 'publish',
+    if (!$side_term) {
+        continue;
+    }
+    $side_posts = technorapper_home_posts(array(
         'posts_per_page' => 1,
-        'category' => $side_term->term_id,
-        'ignore_sticky_posts' => true,
-        'no_found_rows' => true,
+        'category'       => $side_term->term_id,
     ));
-    if ($side_posts) { $side[] = $side_posts[0]; }
+    if ($side_posts) {
+        $side[] = $side_posts[0];
+    }
 }
-if ($hero) { $GLOBALS['technorapper_home_used_ids'][] = (int) $hero->ID; }
-foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = (int) $hero_side_post->ID; }
+if ($hero) {
+    $GLOBALS['technorapper_home_used_ids'][] = (int) $hero->ID;
+}
+foreach ($side as $hero_side_post) {
+    $GLOBALS['technorapper_home_used_ids'][] = (int) $hero_side_post->ID;
+}
 ?>
 
 <div class="home-shell">
-  <?php if ($hero) : $GLOBALS['post'] = $hero; setup_postdata($hero); ?>
+  <?php if ($hero) : setup_postdata($hero); ?>
     <section class="home-hero" aria-label="Top stories">
       <article class="hero-main">
         <a href="<?php the_permalink(); ?>" class="hero-main-link">
           <div class="hero-media">
-            <?php $img = technorapper_first_image($hero); if ($img) echo technorapper_img($img, get_the_title()); ?>
+            <?php $img = technorapper_first_image($hero); if ($img) : ?>
+              <?php echo technorapper_img($img, get_the_title()); ?>
+            <?php endif; ?>
           </div>
           <div class="hero-copy">
             <span class="beat"><?php echo esc_html(($cat = get_the_category()) && isset($cat[0]) ? $cat[0]->name : 'Top Story'); ?></span>
@@ -134,18 +180,20 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
 
     <div class="latest-grid">
       <?php
-      $latest = get_posts(array(
-          'post_type' => 'post',
-          'post_status' => 'publish',
-          'posts_per_page' => 8,
-          'post__not_in' => !empty($GLOBALS['technorapper_home_used_ids']) ? $GLOBALS['technorapper_home_used_ids'] : array(),
-          'ignore_sticky_posts' => true,
-          'no_found_rows' => true,
-      ));
+      $latest = array_slice($hero_posts, 4, 8);
+      if (count($latest) < 8) {
+          $latest = array_merge(
+              $latest,
+              technorapper_home_posts(array(
+                  'posts_per_page' => 8 - count($latest),
+                  'post__not_in'   => !empty($GLOBALS['technorapper_home_used_ids']) ? $GLOBALS['technorapper_home_used_ids'] : array(),
+              ))
+          );
+          $latest = array_slice($latest, 0, 8);
+      }
       foreach ($latest as $post) :
           $GLOBALS['post'] = $post;
           setup_postdata($post);
-          $GLOBALS['technorapper_home_used_ids'][] = (int) $post->ID;
       ?>
         <article class="latest-item">
           <a href="<?php the_permalink(); ?>">
@@ -165,6 +213,9 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
   </section>
 
   <?php
+  foreach ($latest as $used_post) {
+      $GLOBALS['technorapper_home_used_ids'][] = (int) $used_post->ID;
+  }
   foreach (array(
       array('ai', 'AI Desk'),
       array('apple', 'Apple Desk'),
