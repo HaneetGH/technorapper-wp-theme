@@ -311,7 +311,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     .page-body { max-width: 70ch; }
     .page-body p, .body p { font-family: Georgia, "Iowan Old Style", Palatino, serif; font-size: 18px; line-height: 1.55; margin: 0 0 14px; }
     .page-body a, .body a { color: var(--accent); text-decoration: underline; }
-    .page-body img, .body img { width: 100%; height: auto; margin: 12px 0; }
+    .page-body img, .body img { width: auto; max-width: 100%; height: auto; margin: 12px 0; }
     .page-body ul, .page-body ol { margin: 0 0 14px; padding-left: 1.2em; }
     .ad .slot { font-family: ui-monospace, Menlo, monospace; font-size: 11px; margin-top: 6px; }
     .site-footer { background: var(--bar); color: #cfc6e4; }
