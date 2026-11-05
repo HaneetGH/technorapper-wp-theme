@@ -1,0 +1,108 @@
+name: Release WordPress Theme
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: theme-release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validate, package and release theme
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Read theme version
+        id: theme
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^Version:[[:space:]]*//p' style.css | head -n 1)"
+          name="$(sed -n 's/^Theme Name:[[:space:]]*//p' style.css | head -n 1)"
+          [[ -n "$version" && -n "$name" ]] || exit 1
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid semantic version: $version"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Validate PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=0
+          while IFS= read -r -d '' file; do
+            php -l "$file" || failed=1
+          done < <(find . -type f -name '*.php' -not -path './.git/*' -print0)
+          [[ "$failed" -eq 0 ]] || exit 1
+
+      - name: Validate required theme files
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in style.css functions.php index.php header.php footer.php front-page.php single.php page.php archive.php search.php 404.php; do
+            [[ -f "$file" ]] || { echo "Missing required theme file: $file"; exit 1; }
+          done
+
+      - name: Check WordPress theme header
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '^Theme Name:' style.css
+          grep -q '^Version: ${{ steps.theme.outputs.version }}$' style.css
+          grep -q '^Tested up to: 7.1$' style.css
+
+      - name: Build theme ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          mkdir -p dist/technorapper
+          rsync -a --delete --exclude='.git/' --exclude='.github/' --exclude='dist/' --exclude='*.zip' --exclude='screenshot.png' ./ dist/technorapper/
+          (cd dist && zip -r "../technorapper-${{ steps.theme.outputs.version }}.zip" technorapper)
+          sha256sum "technorapper-${{ steps.theme.outputs.version }}.zip" > "technorapper-${{ steps.theme.outputs.version }}.zip.sha256"
+
+      - name: Check whether release already exists
+        id: release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.theme.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish GitHub release
+        if: steps.release.outputs.exists == 'false'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.theme.outputs.version }}
+          THEME_NAME: ${{ steps.theme.outputs.name }}
+        run: |
+          set -euo pipefail
+          gh release create "v$VERSION" "technorapper-$VERSION.zip" "technorapper-$VERSION.zip.sha256" --title "$THEME_NAME $VERSION" --generate-notes --target "$GITHUB_SHA"
+
+      - name: Release summary
+        shell: bash
+        env:
+          VERSION: ${{ steps.theme.outputs.version }}
+        run: |
+          echo "TechnoRapper theme release $VERSION" >> "$GITHUB_STEP_SUMMARY"
