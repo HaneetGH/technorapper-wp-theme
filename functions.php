@@ -8,9 +8,9 @@ function technorapper_setup()
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
     add_theme_support('automatic-feed-links');
-    add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script'));
+    add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script', 'navigation-widgets'));
     add_theme_support('responsive-embeds');
-    set_post_thumbnail_size(1160, 680, true);
+    set_post_thumbnail_size(1160, 680, true);\n    add_image_size('technorapper-card', 720, 450, true);\n    add_image_size('technorapper-hero', 1160, 720, true);
     register_nav_menus(array(
         'primary' => 'Primary',
         'footer'  => 'Footer',
@@ -46,7 +46,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_template_directory_uri() . '/style.min.css', array(), '1.1.0');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.1.1');
     $client = technorapper_adsense_client();
     if ($client === '' || class_exists('Google\\Site_Kit\\Plugin')) {
         return;
@@ -133,7 +133,7 @@ function technorapper_first_image($post = null)
         return '';
     }
     if (has_post_thumbnail($post)) {
-        $url = get_the_post_thumbnail_url($post, 'medium_large');
+        $url = get_the_post_thumbnail_url($post, 'technorapper-card');
         if ($url) {
             return $url;
         }
@@ -157,7 +157,7 @@ function technorapper_img($url, $alt = '')
     if ($alt === '') {
         $alt = get_the_title();
     }
-    return '<img src="' . esc_url($url) . '" alt="' . esc_attr($alt) . '">';
+    return '<img src="' . esc_url($url) . '" alt="' . esc_attr($alt) . '" loading="lazy" decoding="async">';
 }
 
 function technorapper_social_image()
