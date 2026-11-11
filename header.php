@@ -16,6 +16,10 @@
     </div>
   </div>
   <div class="wrap mast">
+    <button class="menu-toggle" type="button" aria-controls="site-drawer" aria-expanded="false">
+      <span class="menu-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span class="screen-reader-text">Open menu</span>
+    </button>
     <a class="home-btn" href="<?php echo esc_url(home_url('/')); ?>">Home</a>
     <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
       <span>
@@ -41,6 +45,7 @@
     </div>
   </nav>
 </header>
+<?php technorapper_drawer(); ?>
 <main id="content"><div class="wrap">
 <?php
 if (!is_front_page() && !is_singular('post')) {

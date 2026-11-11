@@ -11,11 +11,8 @@
               echo '<a href="' . esc_url(get_category_link($term)) . '">' . esc_html($desk[1]) . '</a>';
           }
       }
-      foreach (array('about', 'editorial-standards', 'corrections', 'contact-us-page', 'work-with-us', 'support-center', 'privacy-policy') as $slug) {
-          $page = get_page_by_path($slug);
-          if ($page && $page->post_status === 'publish') {
-              echo '<a href="' . esc_url(get_permalink($page)) . '">' . esc_html(get_the_title($page)) . '</a>';
-          }
+      foreach (technorapper_site_pages() as $page) {
+          echo '<a href="' . esc_url(get_permalink($page)) . '">' . esc_html(get_the_title($page)) . '</a>';
       }
       ?>
     </nav>
