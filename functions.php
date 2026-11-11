@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.3');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.4');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.3',
+        '1.3.4',
         true
     );
     wp_script_add_data('technorapper-drawer', 'strategy', 'defer');
@@ -99,29 +99,6 @@ function technorapper_front_page_styles()
     wp_dequeue_style('global-styles');
 }
 add_action('wp_enqueue_scripts', 'technorapper_front_page_styles', 100);
-
-function technorapper_preload_home_lcp()
-{
-    if (!is_front_page()) {
-        return;
-    }
-    $posts = get_posts(array(
-        'post_type'           => 'post',
-        'post_status'         => 'publish',
-        'posts_per_page'      => 1,
-        'ignore_sticky_posts' => true,
-        'no_found_rows'       => true,
-    ));
-    if (!$posts) {
-        return;
-    }
-    $url = technorapper_first_image($posts[0]);
-    if (!$url) {
-        return;
-    }
-    echo '<link rel="preload" as="image" href="' . esc_url($url) . '" fetchpriority="high">' . "\n";
-}
-add_action('wp_head', 'technorapper_preload_home_lcp', 1);
 
 function technorapper_desk_term($slug)
 {
