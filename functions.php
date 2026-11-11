@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.1');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.2');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.1',
+        '1.3.2',
         true
     );
     $client = technorapper_adsense_client();
