@@ -42,11 +42,11 @@ The theme reserves these slots:
 | In-article | After the second paragraph and at the end of a post | In-article slot |
 
 1. Open **Appearance → Customize → Ads**.
-2. Paste your ad client (`ca-pub-…`) and the two slot IDs from your ad account.
+2. Paste your ad client (`ca-pub-…`) and the two slot IDs from your ad account. If **Google Site Kit** is connected, you can leave the client empty — the theme uses Site Kit’s AdSense client.
 3. Publish. Units fill on your live domain (they will not fill on `localhost`).
-4. Check **Hide ad placeholders** if you want empty slots hidden until IDs are set.
+4. Check **Hide ad placeholders** if you want empty slots hidden until IDs are set. Placeholders are also hidden automatically when Site Kit AdSense is connected, so archives and search do not show the setup boxes.
 
-Google Site Kit can stay active; the theme will not load a second ads script when Site Kit is present.
+Google Site Kit can stay active; the theme will not load a second ads script when Site Kit is already printing the AdSense snippet.
 
 Developers can also supply values in a small must-use plugin:
 

@@ -48,16 +48,17 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.0');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.1');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.0',
+        '1.3.1',
         true
     );
     $client = technorapper_adsense_client();
-    if ($client === '' || class_exists('Google\\Site_Kit\\Plugin')) {
+    $kit = technorapper_site_kit_adsense_settings();
+    if ($client === '' || !empty($kit['useSnippet'])) {
         return;
     }
     wp_enqueue_script(
@@ -320,10 +321,38 @@ function technorapper_content_img_alts($content)
 }
 add_filter('the_content', 'technorapper_content_img_alts', 20);
 
+function technorapper_site_kit_adsense_settings()
+{
+    $settings = get_option('googlesitekit_adsense_settings');
+    return is_array($settings) ? $settings : array();
+}
+
+function technorapper_site_kit_adsense_client()
+{
+    $settings = technorapper_site_kit_adsense_settings();
+    if (empty($settings['clientID'])) {
+        return '';
+    }
+    return preg_replace('/[^a-z0-9-]/i', '', (string) $settings['clientID']);
+}
+
+function technorapper_site_kit_adsense_connected()
+{
+    if (technorapper_site_kit_adsense_client() !== '') {
+        return true;
+    }
+    $settings = technorapper_site_kit_adsense_settings();
+    return !empty($settings['useSnippet']) || !empty($settings['accountSetupComplete']);
+}
+
 function technorapper_adsense_client()
 {
     $client = apply_filters('technorapper_adsense_client', get_theme_mod('adsense_client', ''));
-    return preg_replace('/[^a-z0-9-]/i', '', (string) $client);
+    $client = preg_replace('/[^a-z0-9-]/i', '', (string) $client);
+    if ($client !== '') {
+        return $client;
+    }
+    return technorapper_site_kit_adsense_client();
 }
 
 function technorapper_adsense_slot($which)
@@ -334,7 +363,7 @@ function technorapper_adsense_slot($which)
 
 function technorapper_ad_placeholder($kind = 'box')
 {
-    if (get_theme_mod('hide_ad_placeholders')) {
+    if (get_theme_mod('hide_ad_placeholders') || technorapper_site_kit_adsense_connected()) {
         return '';
     }
     $class = ($kind === 'banner' || $kind === 'inarticle') ? 'ad banner placeholder' : 'ad placeholder';
@@ -404,7 +433,7 @@ function technorapper_customize_register($wp_customize)
 {
     $wp_customize->add_section('technorapper_ads', array(
         'title'       => 'Ads',
-        'description' => 'Paste your own ad client and slot IDs. Leave them empty to show labeled placeholders.',
+        'description' => 'Paste slot IDs for the theme units. If Google Site Kit is connected, its AdSense client is used automatically and empty slots stay hidden so Site Kit can place ads.',
     ));
     $wp_customize->add_setting('adsense_client', array(
         'default'           => '',

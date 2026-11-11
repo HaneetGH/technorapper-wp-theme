@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.0
+Version: 1.3.1
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -103,7 +103,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     .nav .wrap { display: flex; gap: 18px; overflow-x: auto; align-items: center; }
     .nav a { color: #d9d2ea; font-weight: 600; font-size: 14px; padding: 12px 0; white-space: nowrap; border-bottom: 2px solid transparent; }
     .nav a[aria-current="page"], .nav a:hover { color: #fff; border-bottom-color: var(--accent-bright); }
-    .site-header + main { padding: 22px 0 48px; }
+    main#content { padding: 22px 0 48px; }
     .board {
       display: grid;
       grid-template-columns: 1.5fr 1fr 1fr;
@@ -369,6 +369,8 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       .tile { min-height: 150px; }
       .tile.hero, .tile.wide { grid-column: 1 / -1; grid-row: auto; min-height: 220px; }
       .fold { grid-template-columns: minmax(0, 1fr); gap: 18px; margin-top: 22px; }
+      .fold .track { order: 1; }
+      .fold .side { order: 2; }
       .side, .rail, .track, .feed { min-width: 0; max-width: 100%; }
       .side, .article aside .ad { position: static; max-height: none; }
       .side .ad { max-width: 300px; }
@@ -475,7 +477,6 @@ ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
 }
 
 /* Keep theme chrome and image rules scoped to theme components. */
-.site-header + main#content { padding-top: 22px; }
 .card .pic img, .tile img, .article .photo img, .result .photo img {
   display: block;
   width: 100%;
