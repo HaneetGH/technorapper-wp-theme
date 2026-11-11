@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.4');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.5');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.4',
+        '1.3.5',
         true
     );
     wp_script_add_data('technorapper-drawer', 'strategy', 'defer');
@@ -184,6 +184,13 @@ function technorapper_img($url, $alt = '', $priority = false)
         $alt = get_the_title();
     }
     $html = '<img src="' . esc_url($url) . '" alt="' . esc_attr($alt) . '"';
+    if (preg_match('/-(\d+)x(\d+)\.(?:jpe?g|png|gif|webp)(?:$|[?#])/i', $url, $size)) {
+        $width  = (int) $size[1];
+        $height = (int) $size[2];
+        if ($width > 0 && $height > 0 && $width <= 4000 && $height <= 4000) {
+            $html .= ' width="' . $width . '" height="' . $height . '"';
+        }
+    }
     if ($priority) {
         $html .= ' loading="eager" fetchpriority="high" decoding="async"';
     } else {
@@ -385,7 +392,11 @@ function technorapper_adsense_slot($which)
 
 function technorapper_ad_placeholder($kind = 'box')
 {
-    if (get_theme_mod('hide_ad_placeholders') || technorapper_site_kit_adsense_connected()) {
+    if (technorapper_site_kit_adsense_connected()) {
+        $class = ($kind === 'banner' || $kind === 'inarticle') ? 'ad banner' : 'ad';
+        return '<aside class="' . esc_attr($class) . '" aria-label="Advertisement"></aside>';
+    }
+    if (get_theme_mod('hide_ad_placeholders')) {
         return '';
     }
     $class = ($kind === 'banner' || $kind === 'inarticle') ? 'ad banner placeholder' : 'ad placeholder';
