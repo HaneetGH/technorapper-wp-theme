@@ -159,7 +159,7 @@ function technorapper_first_image($post = null)
     return '';
 }
 
-function technorapper_img($url, $alt = '')
+function technorapper_img($url, $alt = '', $priority = false)
 {
     if (!$url) {
         return '';
@@ -167,7 +167,13 @@ function technorapper_img($url, $alt = '')
     if ($alt === '') {
         $alt = get_the_title();
     }
-    return '<img src="' . esc_url($url) . '" alt="' . esc_attr($alt) . '" loading="lazy" decoding="async">';
+    $html = '<img src="' . esc_url($url) . '" alt="' . esc_attr($alt) . '"';
+    if ($priority) {
+        $html .= ' loading="eager" fetchpriority="high" decoding="async"';
+    } else {
+        $html .= ' loading="lazy" decoding="async"';
+    }
+    return $html . '>';
 }
 
 function technorapper_social_image()

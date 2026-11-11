@@ -90,7 +90,7 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
       <article class="hero-main">
         <a href="<?php the_permalink(); ?>" class="hero-main-link">
           <div class="hero-media">
-            <?php $img = technorapper_first_image($hero); if ($img) echo technorapper_img($img, get_the_title()); ?>
+            <?php $img = technorapper_first_image($hero); if ($img) echo technorapper_img($img, get_the_title(), true); ?>
           </div>
           <div class="hero-copy">
             <span class="beat"><?php echo esc_html(($cat = get_the_category()) && isset($cat[0]) ? $cat[0]->name : 'Top Story'); ?></span>
