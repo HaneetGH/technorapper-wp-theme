@@ -1,6 +1,6 @@
 # TechnoRapper
 
-Open-source WordPress magazine theme: a photo board homepage, desk rail, paged archives, story pages, and built-in ad slots.
+Open-source WordPress magazine theme: a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
 
 ![Homepage](screenshot.png)
 
@@ -10,6 +10,7 @@ GPL v2 or later. Use it on your own news or review site, fork it, and ship ads f
 
 - Photo-board front page with image-led stories
 - Desk rail built from your categories
+- Hamburger side menu for desks, nested sections, and site pages
 - Paged archives, search, and single posts
 - RSS at `/feed/` and normal WordPress permalinks
 - Ad slots on home, archives, the sidebar, and under posts
@@ -77,7 +78,7 @@ If you leave that empty, the theme uses those default slugs when they exist, oth
 
 ## Menus and widgets
 
-- **Primary** — top section nav
+- **Primary** — top section nav and the side menu (nested items expand with +)
 - **Footer** — optional; otherwise the theme prints desks and matching pages
 - **Main Sidebar** — extra widgets under the sidebar ad
 - **In-story advertisement** — optional widget under a post
@@ -86,6 +87,7 @@ If you leave that empty, the theme uses those default slugs when they exist, oth
 
 ```
 header.php / footer.php
+assets/js/drawer.js     hamburger side menu
 front-page.php          photo board + banner + desks + latest
 single.php              story + sidebar ad
 archive.php / category.php / search.php

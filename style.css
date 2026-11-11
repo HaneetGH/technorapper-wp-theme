@@ -3,8 +3,8 @@ Theme Name: TechnoRapper
 Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
-Description: Open-source magazine theme with a photo board homepage, desk rail, paged archives, story pages, and built-in ad slots.
-Version: 1.2.0
+Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
+Version: 1.3.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -43,6 +43,37 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     .utils .wrap { display: flex; justify-content: space-between; padding-top: 8px; padding-bottom: 0; }
     .utils a { color: var(--accent-bright); }
     .mast { display: flex; align-items: center; gap: 14px; padding: 12px 0 14px; }
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .menu-toggle:hover { background: #332c52; }
+    .menu-toggle-bars {
+      position: relative;
+      display: block;
+      width: 18px;
+      height: 12px;
+    }
+    .menu-toggle-bars span {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #fff;
+    }
+    .menu-toggle-bars span:nth-child(1) { top: 0; }
+    .menu-toggle-bars span:nth-child(2) { top: 5px; }
+    .menu-toggle-bars span:nth-child(3) { top: 10px; }
+    .menu-toggle:hover .menu-toggle-bars span { background: var(--accent-bright); }
     .home-btn, .nav a.home-btn {
       background: var(--accent);
       color: #fff;
@@ -399,7 +430,10 @@ ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
 .desk-link:focus-visible,
 .find button:focus-visible,
 .find input:focus-visible,
-.nav a:focus-visible {
+.nav a:focus-visible,
+.menu-toggle:focus-visible,
+.drawer a:focus-visible,
+.drawer button:focus-visible {
   outline: 3px solid var(--accent-bright);
   outline-offset: 3px;
 }
@@ -480,3 +514,164 @@ ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
 .home-newsletter>a:hover{color:#fff;background:#4636e0}
 @media(max-width:980px){.home-shell{padding-left:16px;padding-right:16px}.home-hero{grid-template-columns:1fr}.hero-side{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr}.hero-side-card>a{grid-template-columns:1fr}.hero-side-media{aspect-ratio:16/10}.hero-side-copy h2{font-size:15px}.home-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.latest-grid{grid-template-columns:1fr}}
 @media(max-width:640px){.home-shell{padding-left:12px;padding-right:12px}.hero-copy{padding:17px 16px 19px}.hero-copy h1{font-size:31px}.hero-side{grid-template-columns:1fr;grid-template-rows:repeat(3,auto)}.hero-side-card>a{grid-template-columns:35% 65%;min-height:120px}.hero-side-media{aspect-ratio:auto}.section-head h2{font-size:24px}.latest-item>a{grid-template-columns:110px minmax(0,1fr);gap:12px}.latest-item h3{font-size:16px}.latest-item p{display:none}.home-cards{grid-template-columns:1fr 1fr;gap:18px 12px}.home-card-copy h3{font-size:15px}.home-newsletter{flex-direction:column;align-items:flex-start}}
+
+/* 1.3.0 side menu */
+body.drawer-open { overflow: hidden; }
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(22, 18, 43, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.drawer-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 41;
+  width: min(320px, 88vw);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  background: var(--bar);
+  color: #fff;
+  visibility: hidden;
+  transform: translateX(-105%);
+  box-shadow: 18px 0 40px rgba(12, 8, 28, 0.35);
+}
+.drawer.is-open {
+  visibility: visible;
+  transform: translateX(0);
+}
+.drawer-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px 12px 18px;
+  background: var(--bar);
+  border-bottom: 1px solid #332c52;
+}
+.drawer-head .wordmark { font-size: 22px; }
+.drawer-close {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+.drawer-close:hover { color: var(--accent-bright); }
+.drawer-nav { padding: 10px 8px 8px; }
+.drawer-list,
+.drawer-sub,
+.drawer-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.drawer-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.drawer-row > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  padding: 11px 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.drawer-row > a:hover,
+.drawer-item.is-current > .drawer-row > a { color: var(--accent-bright); }
+.drawer .tick {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+.drawer-list > .drawer-item:nth-child(even) .tick { background: var(--accent-bright); }
+.drawer-more {
+  width: 36px;
+  height: 36px;
+  margin: 0 6px 0 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #cfc6e4;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.drawer-more:hover,
+.drawer-more[aria-expanded="true"] { color: #fff; }
+.drawer-sub { display: none; padding: 0 0 8px 30px; }
+html:not(.js) .drawer-sub { display: block; }
+.drawer-item.is-expanded > .drawer-sub { display: block; }
+.drawer-sub .drawer-row > a {
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d9d2ea;
+}
+.drawer-rss {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin: 8px 18px 0;
+  padding: 8px 12px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.drawer-rss:hover { background: #4636e0; color: #fff; }
+.drawer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 18px 8px 0;
+  padding-top: 12px;
+  border-top: 1px solid #332c52;
+}
+.drawer-meta a {
+  padding: 8px 10px;
+  color: #d9d2ea;
+  font-size: 14px;
+  font-weight: 600;
+}
+.drawer-meta a:hover { color: var(--accent-bright); }
+.drawer-copy {
+  margin: auto 0 0;
+  padding: 18px 18px 22px;
+  color: #9f96b8;
+  font-size: 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .drawer { transition: transform 220ms ease, visibility 220ms ease; }
+  .drawer-backdrop { transition: opacity 220ms ease, visibility 220ms ease; }
+}

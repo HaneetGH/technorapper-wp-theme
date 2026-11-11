@@ -48,7 +48,14 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.2.0');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.0');
+    wp_enqueue_script(
+        'technorapper-drawer',
+        get_template_directory_uri() . '/assets/js/drawer.js',
+        array(),
+        '1.3.0',
+        true
+    );
     $client = technorapper_adsense_client();
     if ($client === '' || class_exists('Google\\Site_Kit\\Plugin')) {
         return;
@@ -487,4 +494,157 @@ function technorapper_menu_fallback()
         echo '<li><a href="' . esc_url(get_permalink($contact)) . '">Contact Us</a></li>';
     }
     echo '</ul>';
+}
+
+function technorapper_site_pages()
+{
+    $pages = array();
+    foreach (array('about', 'editorial-standards', 'corrections', 'contact-us-page', 'work-with-us', 'support-center', 'privacy-policy') as $slug) {
+        $page = get_page_by_path($slug);
+        if ($page && $page->post_status === 'publish') {
+            $pages[] = $page;
+        }
+    }
+    return $pages;
+}
+
+function technorapper_drawer_item($url, $label, $current = false, $children = array())
+{
+    $has_sub = !empty($children);
+    echo '<li class="drawer-item' . ($has_sub ? ' has-sub' : '') . ($current ? ' is-current' : '') . '">';
+    echo '<div class="drawer-row">';
+    echo '<a href="' . esc_url($url) . '"' . ($current ? ' aria-current="page"' : '') . '>';
+    echo '<span class="tick" aria-hidden="true"></span>' . esc_html($label);
+    echo '</a>';
+    if ($has_sub) {
+        echo '<button type="button" class="drawer-more" aria-expanded="false" aria-label="' . esc_attr(sprintf('Show %s sections', $label)) . '">+</button>';
+    }
+    echo '</div>';
+    if ($has_sub) {
+        echo '<ul class="drawer-sub">';
+        foreach ($children as $child) {
+            $child_on = !empty($child['current']);
+            echo '<li class="drawer-item' . ($child_on ? ' is-current' : '') . '">';
+            echo '<div class="drawer-row">';
+            echo '<a href="' . esc_url($child['url']) . '"' . ($child_on ? ' aria-current="page"' : '') . '>' . esc_html($child['label']) . '</a>';
+            echo '</div></li>';
+        }
+        echo '</ul>';
+    }
+    echo '</li>';
+}
+
+function technorapper_drawer_fallback()
+{
+    echo '<ul class="drawer-list">';
+    foreach (technorapper_desks() as $desk) {
+        $term = technorapper_desk_term($desk[0]);
+        if (!$term) {
+            continue;
+        }
+        $kids = get_categories(array(
+            'taxonomy'   => 'category',
+            'parent'     => (int) $term->term_id,
+            'hide_empty' => true,
+        ));
+        $children = array();
+        foreach ($kids as $child) {
+            $children[] = array(
+                'url'     => get_category_link($child),
+                'label'   => $child->name,
+                'current' => is_category($child->term_id),
+            );
+        }
+        technorapper_drawer_item(
+            get_category_link($term),
+            $desk[1],
+            is_category($term->term_id),
+            $children
+        );
+    }
+    echo '</ul>';
+}
+
+function technorapper_drawer()
+{
+    ?>
+    <div class="drawer-backdrop" data-drawer-close></div>
+    <aside id="site-drawer" class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true" inert>
+      <div class="drawer-head">
+        <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+          <span class="wordmark" id="drawer-title">Techno<em>Rapper</em></span>
+        </a>
+        <button class="drawer-close" type="button" data-drawer-close>
+          <span aria-hidden="true">&times;</span>
+          <span class="screen-reader-text">Close menu</span>
+        </button>
+      </div>
+      <nav class="drawer-nav" aria-label="Sections">
+        <?php
+        wp_nav_menu(array(
+            'theme_location' => 'primary',
+            'container'      => false,
+            'menu_class'     => 'drawer-list',
+            'fallback_cb'    => 'technorapper_drawer_fallback',
+            'walker'         => class_exists('Technorapper_Drawer_Walker') ? new Technorapper_Drawer_Walker() : null,
+            'depth'          => 2,
+        ));
+        ?>
+      </nav>
+      <a class="drawer-rss" href="<?php echo esc_url(home_url('/feed/')); ?>">RSS</a>
+      <?php $pages = technorapper_site_pages(); ?>
+      <?php if ($pages) : ?>
+      <nav class="drawer-meta" aria-label="About the site">
+        <?php foreach ($pages as $page) : ?>
+          <a href="<?php echo esc_url(get_permalink($page)); ?>"><?php echo esc_html(get_the_title($page)); ?></a>
+        <?php endforeach; ?>
+      </nav>
+      <?php endif; ?>
+      <p class="drawer-copy">© <?php echo esc_html(wp_date('Y')); ?> TechnoRapper · Since 2012</p>
+    </aside>
+    <?php
+}
+
+if (class_exists('Walker_Nav_Menu')) {
+    class Technorapper_Drawer_Walker extends Walker_Nav_Menu
+    {
+        public function start_lvl(&$output, $depth = 0, $args = null)
+        {
+            $output .= '<ul class="drawer-sub">';
+        }
+
+        public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0)
+        {
+            $classes = empty($item->classes) ? array() : (array) $item->classes;
+            $has_children = in_array('menu-item-has-children', $classes, true);
+            $current = in_array('current-menu-item', $classes, true)
+                || in_array('current-menu-ancestor', $classes, true)
+                || in_array('current-menu-parent', $classes, true);
+            $title = wp_strip_all_tags(apply_filters('the_title', $item->title, $item->ID));
+            $li = array('drawer-item');
+            if ($has_children) {
+                $li[] = 'has-sub';
+            }
+            if ($current) {
+                $li[] = 'is-current';
+            }
+            $output .= '<li class="' . esc_attr(implode(' ', $li)) . '">';
+            $output .= '<div class="drawer-row">';
+            $output .= '<a href="' . esc_url($item->url) . '"' . ($current ? ' aria-current="page"' : '') . '>';
+            if ((int) $depth === 0) {
+                $output .= '<span class="tick" aria-hidden="true"></span>';
+            }
+            $output .= esc_html($title);
+            $output .= '</a>';
+            if ($has_children) {
+                $output .= '<button type="button" class="drawer-more" aria-expanded="false" aria-label="' . esc_attr(sprintf('Show %s sections', $title)) . '">+</button>';
+            }
+            $output .= '</div>';
+        }
+
+        public function end_el(&$output, $item, $depth = 0, $args = null)
+        {
+            $output .= '</li>';
+        }
+    }
 }
