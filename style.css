@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.4
+Version: 1.3.5
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -497,7 +497,8 @@ ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
 .hero-side-card>a{display:grid;grid-template-columns:40% 60%;min-height:0;height:100%}.hero-side-media{min-height:0;overflow:hidden;background:#241c40}
 .hero-side-media img{width:100%;height:100%;object-fit:cover}.hero-side-copy{padding:14px;display:flex;flex-direction:column;min-width:0}
 .hero-side-copy h2{font-size:18px;line-height:1.15;margin:5px 0 8px}.hero-side-copy time{margin-top:auto;color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:11px}
-.hero-side-card:hover h2{color:var(--accent)}.home-ad{min-height:0;margin:18px 0 28px}
+.hero-side-card:hover h2{color:var(--accent)}.home-ad{min-height:90px;margin:18px 0 28px}
+.ad:empty{min-height:250px}.ad.banner:empty{min-height:90px;width:100%}
 .latest-section,.home-section{margin-top:42px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
 .section-kicker{display:block;color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
 .section-head h2{font-size:28px;line-height:1}.section-more{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
