@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.5');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.6');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.5',
+        '1.3.6',
         true
     );
     wp_script_add_data('technorapper-drawer', 'strategy', 'defer');
@@ -173,6 +173,43 @@ function technorapper_first_image($post = null)
         }
     }
     return '';
+}
+
+function technorapper_more_stories($post_id, $term_id, $limit = 4)
+{
+    $post_id = (int) $post_id;
+    $term_id = (int) $term_id;
+    if ($post_id <= 0 || $term_id <= 0) {
+        return array();
+    }
+    try {
+        $posts = get_posts(array(
+            'numberposts'         => $limit,
+            'post__not_in'        => array($post_id),
+            'category'            => $term_id,
+            'ignore_sticky_posts' => true,
+            'no_found_rows'       => true,
+            'suppress_filters'    => true,
+        ));
+    } catch (Throwable $e) {
+        return array();
+    }
+    $links = array();
+    foreach ($posts as $post) {
+        try {
+            $url = get_permalink($post);
+            $title = isset($post->post_title) ? $post->post_title : '';
+            if ($url && $title !== '') {
+                $links[] = array(
+                    'url'   => $url,
+                    'title' => $title,
+                );
+            }
+        } catch (Throwable $e) {
+            continue;
+        }
+    }
+    return $links;
 }
 
 function technorapper_img($url, $alt = '', $priority = false)
