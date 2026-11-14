@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.8');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.9');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.8',
+        '1.3.9',
         true
     );
     wp_script_add_data('technorapper-drawer', 'strategy', 'defer');
@@ -108,6 +108,9 @@ function technorapper_desk_term($slug)
 
 function technorapper_desks()
 {
+    if (array_key_exists('technorapper_desks_cache', $GLOBALS)) {
+        return $GLOBALS['technorapper_desks_cache'];
+    }
     $custom = trim((string) get_theme_mod('desk_slugs', ''));
     if ($custom !== '') {
         $desks = array();
@@ -118,6 +121,7 @@ function technorapper_desks()
             }
         }
         if ($desks) {
+            $GLOBALS['technorapper_desks_cache'] = $desks;
             return $desks;
         }
     }
@@ -139,6 +143,7 @@ function technorapper_desks()
         }
     }
     if ($desks) {
+        $GLOBALS['technorapper_desks_cache'] = $desks;
         return $desks;
     }
     $cats = get_categories(array(
@@ -150,8 +155,164 @@ function technorapper_desks()
     foreach ($cats as $cat) {
         $desks[] = array($cat->slug, $cat->name);
     }
+    $GLOBALS['technorapper_desks_cache'] = $desks;
     return $desks;
 }
+
+function technorapper_recent_posts($limit = 40)
+{
+    $limit = max(1, (int) $limit);
+    if (!isset($GLOBALS['technorapper_recent_posts']) || !is_array($GLOBALS['technorapper_recent_posts'])) {
+        $GLOBALS['technorapper_recent_posts'] = array();
+    }
+    foreach ($GLOBALS['technorapper_recent_posts'] as $cached_limit => $cached_posts) {
+        if ((int) $cached_limit >= $limit) {
+            return array_slice($cached_posts, 0, $limit);
+        }
+    }
+    $posts = get_posts(array(
+        'post_type'              => 'post',
+        'post_status'            => 'publish',
+        'posts_per_page'         => $limit,
+        'ignore_sticky_posts'    => true,
+        'no_found_rows'          => true,
+        'suppress_filters'       => true,
+        'update_post_term_cache' => true,
+        'update_post_meta_cache' => true,
+    ));
+    $GLOBALS['technorapper_recent_posts'][$limit] = $posts;
+    return $posts;
+}
+
+function technorapper_desk_latest_titles()
+{
+    if (isset($GLOBALS['technorapper_desk_latest_titles']) && is_array($GLOBALS['technorapper_desk_latest_titles'])) {
+        return $GLOBALS['technorapper_desk_latest_titles'];
+    }
+    $map = array();
+    foreach (technorapper_recent_posts(40) as $post) {
+        $cats = get_the_category($post->ID);
+        if (!$cats) {
+            continue;
+        }
+        foreach ($cats as $cat) {
+            $id = (int) $cat->term_id;
+            if (!isset($map[$id])) {
+                $map[$id] = $post;
+            }
+        }
+    }
+    $GLOBALS['technorapper_desk_latest_titles'] = $map;
+    return $map;
+}
+
+function technorapper_card_text($post, $words = 20)
+{
+    $raw = (isset($post->post_excerpt) && $post->post_excerpt !== '') ? $post->post_excerpt : (isset($post->post_content) ? $post->post_content : '');
+    return wp_trim_words(wp_strip_all_tags(strip_shortcodes($raw)), $words);
+}
+
+function technorapper_home_layout($posts, $desks)
+{
+    $by_slug = array();
+    foreach ($posts as $post) {
+        $cats = get_the_category($post->ID);
+        if (!$cats) {
+            continue;
+        }
+        foreach ($cats as $cat) {
+            $by_slug[$cat->slug][] = $post;
+        }
+    }
+
+    $hero = $posts ? $posts[0] : null;
+    $side = array();
+    foreach ($desks as $desk) {
+        if (count($side) >= 3) {
+            break;
+        }
+        if (empty($by_slug[$desk[0]])) {
+            continue;
+        }
+        $side[] = $by_slug[$desk[0]][0];
+    }
+
+    $used = array();
+    if ($hero) {
+        $used[(int) $hero->ID] = true;
+    }
+    foreach ($side as $post) {
+        $used[(int) $post->ID] = true;
+    }
+
+    $latest = array();
+    foreach ($posts as $post) {
+        $id = (int) $post->ID;
+        if (isset($used[$id])) {
+            continue;
+        }
+        $latest[] = $post;
+        $used[$id] = true;
+        if (count($latest) >= 8) {
+            break;
+        }
+    }
+
+    $sections = array();
+    foreach ($desks as $desk) {
+        $picked = array();
+        if (!empty($by_slug[$desk[0]])) {
+            foreach ($by_slug[$desk[0]] as $post) {
+                $id = (int) $post->ID;
+                if (isset($used[$id])) {
+                    continue;
+                }
+                $picked[] = $post;
+                $used[$id] = true;
+                if (count($picked) >= 4) {
+                    break;
+                }
+            }
+        }
+        $sections[] = array($desk[0], $picked);
+    }
+
+    return array(
+        'hero'     => $hero,
+        'side'     => $side,
+        'latest'   => $latest,
+        'sections' => $sections,
+    );
+}
+
+function technorapper_skip_category_count($query)
+{
+    if (is_admin() || !$query->is_main_query() || !$query->is_category()) {
+        return;
+    }
+    $query->set('no_found_rows', true);
+}
+add_action('pre_get_posts', 'technorapper_skip_category_count');
+
+function technorapper_category_count_from_term($posts, $query)
+{
+    if (is_admin() || !$query->is_main_query() || !$query->is_category() || !$query->get('no_found_rows')) {
+        return $posts;
+    }
+    $term = $query->get_queried_object();
+    $count = ($term && isset($term->count)) ? (int) $term->count : count($posts);
+    $per = (int) $query->get('posts_per_page');
+    if ($per < 1) {
+        $per = (int) get_option('posts_per_page');
+    }
+    if ($per < 1) {
+        $per = 10;
+    }
+    $query->found_posts = $count;
+    $query->max_num_pages = (int) ceil($count / $per);
+    return $posts;
+}
+add_filter('the_posts', 'technorapper_category_count_from_term', 10, 2);
 
 function technorapper_desk_menu_item($term, $label)
 {
@@ -264,15 +425,26 @@ function technorapper_more_stories($post_id, $term_id, $limit = 4)
     if ($post_id <= 0 || $term_id <= 0) {
         return array();
     }
+    $posts = array();
     try {
-        $posts = get_posts(array(
-            'numberposts'         => $limit,
-            'post__not_in'        => array($post_id),
-            'category'            => $term_id,
-            'ignore_sticky_posts' => true,
-            'no_found_rows'       => true,
-            'suppress_filters'    => true,
-        ));
+        foreach (technorapper_recent_posts(40) as $post) {
+            if ((int) $post->ID === $post_id) {
+                continue;
+            }
+            $cats = get_the_category($post->ID);
+            if (!$cats) {
+                continue;
+            }
+            foreach ($cats as $cat) {
+                if ((int) $cat->term_id === $term_id) {
+                    $posts[] = $post;
+                    break;
+                }
+            }
+            if (count($posts) >= $limit) {
+                break;
+            }
+        }
     } catch (Throwable $e) {
         return array();
     }
@@ -326,12 +498,7 @@ function technorapper_social_image()
             return $img;
         }
     }
-    $latest = get_posts(array(
-        'posts_per_page'      => 8,
-        'ignore_sticky_posts' => true,
-        'no_found_rows'       => true,
-    ));
-    foreach ($latest as $post) {
+    foreach (technorapper_recent_posts(40) as $post) {
         $img = technorapper_first_image($post);
         if ($img) {
             return $img;

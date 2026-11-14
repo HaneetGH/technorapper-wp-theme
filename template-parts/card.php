@@ -21,7 +21,7 @@ if ($lead && $img) {
     <span class="copy">
       <span class="beat"><?php echo esc_html(trim($desk . ' · ' . get_the_date('j M Y'), ' ·')); ?></span>
       <strong><?php the_title(); ?></strong>
-      <span class="line"><?php echo esc_html(wp_trim_words(wp_strip_all_tags(get_the_excerpt()), 28)); ?></span>
+      <span class="line"><?php echo esc_html(technorapper_card_text(get_post(), 28)); ?></span>
     </span>
   </a>
 </article>

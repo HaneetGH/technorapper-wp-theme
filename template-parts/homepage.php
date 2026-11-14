@@ -1,28 +1,10 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 
-$GLOBALS['technorapper_home_used_ids'] = array();
-
-function technorapper_home_section($slug, $label, $limit = 4)
+function technorapper_home_section($slug, $label, $posts)
 {
     $term = technorapper_desk_term($slug);
-    if (!$term) { return; }
-
-    $used = !empty($GLOBALS['technorapper_home_used_ids']) ? $GLOBALS['technorapper_home_used_ids'] : array();
-    $posts = get_posts(array(
-        'post_type' => 'post',
-        'post_status' => 'publish',
-        'posts_per_page' => $limit,
-        'category' => $term->term_id,
-        'post__not_in' => $used,
-        'ignore_sticky_posts' => true,
-        'no_found_rows' => true,
-    ));
-    if (!$posts) { return; }
-
-    foreach ($posts as $used_post) {
-        $GLOBALS['technorapper_home_used_ids'][] = (int) $used_post->ID;
-    }
+    if (!$term || !$posts) { return; }
     ?>
     <section class="home-section">
       <div class="section-head">
@@ -46,7 +28,7 @@ function technorapper_home_section($slug, $label, $limit = 4)
               <div class="home-card-copy">
                 <span class="beat"><?php echo esc_html($term->name); ?></span>
                 <h3><?php the_title(); ?></h3>
-                <p><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20)); ?></p>
+                <p><?php echo esc_html(technorapper_card_text($post, 20)); ?></p>
                 <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('M j, Y')); ?></time>
               </div>
             </a>
@@ -57,32 +39,10 @@ function technorapper_home_section($slug, $label, $limit = 4)
     <?php
 }
 
-$hero_posts = get_posts(array(
-    'post_type' => 'post',
-    'post_status' => 'publish',
-    'posts_per_page' => 5,
-    'ignore_sticky_posts' => true,
-    'no_found_rows' => true,
-));
-$hero = $hero_posts ? $hero_posts[0] : null;
-$side = array();
-
-foreach (technorapper_desks() as $desk) {
-    if (count($side) >= 3) { break; }
-    $side_term = technorapper_desk_term($desk[0]);
-    if (!$side_term) { continue; }
-    $side_posts = get_posts(array(
-        'post_type' => 'post',
-        'post_status' => 'publish',
-        'posts_per_page' => 1,
-        'category' => $side_term->term_id,
-        'ignore_sticky_posts' => true,
-        'no_found_rows' => true,
-    ));
-    if ($side_posts) { $side[] = $side_posts[0]; }
-}
-if ($hero) { $GLOBALS['technorapper_home_used_ids'][] = (int) $hero->ID; }
-foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = (int) $hero_side_post->ID; }
+$home = technorapper_home_layout(technorapper_recent_posts(100), technorapper_desks());
+$hero = $home['hero'];
+$side = $home['side'];
+$latest = $home['latest'];
 ?>
 
 <div class="home-shell">
@@ -96,7 +56,7 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
           <div class="hero-copy">
             <span class="beat"><?php echo esc_html(($cat = get_the_category()) && isset($cat[0]) ? $cat[0]->name : 'Top Story'); ?></span>
             <h1><?php the_title(); ?></h1>
-            <p><?php echo esc_html(wp_trim_words(get_the_excerpt(), 30)); ?></p>
+            <p><?php echo esc_html(technorapper_card_text($hero, 30)); ?></p>
             <div class="hero-meta"><?php echo esc_html(get_the_date('M j, Y')); ?> · <?php echo esc_html(get_the_author()); ?></div>
           </div>
         </a>
@@ -135,18 +95,9 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
 
     <div class="latest-grid">
       <?php
-      $latest = get_posts(array(
-          'post_type' => 'post',
-          'post_status' => 'publish',
-          'posts_per_page' => 8,
-          'post__not_in' => !empty($GLOBALS['technorapper_home_used_ids']) ? $GLOBALS['technorapper_home_used_ids'] : array(),
-          'ignore_sticky_posts' => true,
-          'no_found_rows' => true,
-      ));
       foreach ($latest as $post) :
           $GLOBALS['post'] = $post;
           setup_postdata($post);
-          $GLOBALS['technorapper_home_used_ids'][] = (int) $post->ID;
       ?>
         <article class="latest-item">
           <a href="<?php the_permalink(); ?>">
@@ -156,7 +107,7 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
             <div>
               <span class="beat"><?php echo esc_html(($cat = get_the_category()) && isset($cat[0]) ? $cat[0]->name : 'News'); ?></span>
               <h3><?php the_title(); ?></h3>
-              <p><?php echo esc_html(wp_trim_words(get_the_excerpt(), 16)); ?></p>
+              <p><?php echo esc_html(technorapper_card_text($post, 16)); ?></p>
               <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('M j, Y')); ?></time>
             </div>
           </a>
@@ -166,11 +117,11 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
   </section>
 
   <?php
-  foreach (technorapper_desks() as $desk) {
-      $slug = $desk[0];
+  foreach ($home['sections'] as $section) {
+      $slug = $section[0];
       $term = technorapper_desk_term($slug);
       if (!$term) { continue; }
-      technorapper_home_section($slug, $term->name . ' Desk', 4);
+      technorapper_home_section($slug, $term->name . ' Desk', $section[1]);
   }
   ?>
 
