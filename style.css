@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.10
+Version: 1.3.11
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -100,8 +100,8 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     }
     .find button { background: var(--paper); color: var(--ink); border: 0; padding: 8px 12px; font-weight: 700; cursor: pointer; }
     .nav { border-top: 1px solid #332c52; }
-    .nav .wrap { display: flex; align-items: stretch; }
-    .nav a { color: #d9d2ea; font-weight: 700; font-size: 15px; line-height: 1.15; padding: 18px 0; white-space: nowrap; border-bottom: 3px solid transparent; }
+    .nav .wrap { display: block; }
+    .nav a { display: block; color: #d9d2ea; font-weight: 700; font-size: 15px; line-height: 1.15; padding: 28px 0; white-space: nowrap; border-bottom: 3px solid transparent; }
     .nav a[aria-current="page"], .nav a:hover { color: #fff; border-bottom-color: var(--accent-bright); }
     main#content { padding: 22px 0 48px; }
     .board {
