@@ -66,12 +66,12 @@ Do not commit real account IDs to a public fork.
 
 ## Desks
 
-Desks are category rails (Apple, AI, Android, Comics, and so on on technorapper.com). Comics is a supported default desk.
+Desks are category rails (Apple, AI, Android, Reviews, Comics, and so on on technorapper.com). Comics is a supported default desk, placed after Reviews.
 
 **Appearance → Customize → Desks** accepts a comma-separated list of category slugs, in order. For example:
 
 ```
-apple, ai, android, comics, reviews
+apple, ai, android, reviews, comics
 ```
 
 If you leave that empty, the theme uses the default slugs (including `comics`) when those categories exist, otherwise your eight busiest categories.
