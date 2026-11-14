@@ -76,6 +76,8 @@ apple, ai, android, reviews, comics
 
 If you leave that empty, the theme uses the default slugs (including `comics`) when those categories exist, otherwise your eight busiest categories.
 
+The header and drawer use that same list. A desk shows up there as soon as its category exists, including one that has no posts yet. Links already in the Primary menu that are not desks, such as Contact Us and About, stay after the desks.
+
 ## Menus and widgets
 
 - **Primary** — top section nav and the side menu (nested items expand with +)

@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.7');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.8');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.7',
+        '1.3.8',
         true
     );
     wp_script_add_data('technorapper-drawer', 'strategy', 'defer');
@@ -152,6 +152,87 @@ function technorapper_desks()
     }
     return $desks;
 }
+
+function technorapper_desk_menu_item($term, $label)
+{
+    $current = is_category($term->term_id);
+    $item = new stdClass();
+    $item->ID = -1 * (int) $term->term_id;
+    $item->db_id = $item->ID;
+    $item->menu_item_parent = 0;
+    $item->object_id = (int) $term->term_id;
+    $item->object = 'category';
+    $item->type = 'taxonomy';
+    $item->type_label = 'Category';
+    $item->title = $label;
+    $item->url = get_category_link($term);
+    $item->target = '';
+    $item->attr_title = '';
+    $item->description = '';
+    $item->xfn = '';
+    $item->classes = array('menu-item', 'menu-item-type-taxonomy', 'menu-item-object-category');
+    $item->current = $current;
+    $item->current_item_ancestor = false;
+    $item->current_item_parent = false;
+    if ($current) {
+        $item->classes[] = 'current-menu-item';
+    }
+    return $item;
+}
+
+function technorapper_sync_primary_menu_desks($items, $args)
+{
+    $location = (is_object($args) && isset($args->theme_location)) ? $args->theme_location : '';
+    if ($location !== 'primary' || !is_array($items)) {
+        return $items;
+    }
+    $desks = technorapper_desks();
+    if (!$desks) {
+        return $items;
+    }
+
+    $by_slug = array();
+    $others = array();
+    $children = array();
+    foreach ($items as $item) {
+        if ((int) $item->menu_item_parent !== 0) {
+            $children[] = $item;
+            continue;
+        }
+        if (isset($item->type, $item->object) && $item->type === 'taxonomy' && $item->object === 'category') {
+            $term = get_term((int) $item->object_id, 'category');
+            if ($term && !is_wp_error($term)) {
+                $by_slug[$term->slug] = $item;
+                continue;
+            }
+        }
+        $others[] = $item;
+    }
+
+    $synced = array();
+    $kept_ids = array();
+    foreach ($desks as $desk) {
+        $term = technorapper_desk_term($desk[0]);
+        if (!$term) {
+            continue;
+        }
+        if (isset($by_slug[$term->slug])) {
+            $item = $by_slug[$term->slug];
+            $item->title = $desk[1];
+            $synced[] = $item;
+            $kept_ids[] = (int) $item->db_id;
+            continue;
+        }
+        $synced[] = technorapper_desk_menu_item($term, $desk[1]);
+    }
+    foreach ($children as $child) {
+        if (in_array((int) $child->menu_item_parent, $kept_ids, true)) {
+            $synced[] = $child;
+        }
+    }
+    return array_merge($synced, $others);
+}
+add_filter('wp_nav_menu_objects', 'technorapper_sync_primary_menu_desks', 20, 2);
 
 function technorapper_first_image($post = null)
 {
