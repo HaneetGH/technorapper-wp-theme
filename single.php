@@ -25,27 +25,21 @@ $img  = technorapper_first_image();
   </div>
   <aside>
     <?php technorapper_ad_box(); ?>
-    <?php if ($desk) :
-        $more = new WP_Query(array(
-            'posts_per_page'      => 4,
-            'post__not_in'        => array(get_the_ID()),
-            'cat'                 => $desk->term_id,
-            'ignore_sticky_posts' => true,
-            'no_found_rows'       => true,
-        ));
-        if ($more->have_posts()) :
+    <?php
+    if ($desk) :
+        $more = technorapper_more_stories(get_the_ID(), $desk->term_id);
+        if ($more) :
             ?>
       <div class="more">
         <div class="panel-h"><span>More in <?php echo esc_html($desk->name); ?></span></div>
-        <?php
-            while ($more->have_posts()) {
-                $more->the_post();
-                echo '<a href="' . esc_url(get_permalink()) . '">' . esc_html(get_the_title()) . '</a>';
-            }
-            wp_reset_postdata();
-            ?>
+        <?php foreach ($more as $related) : ?>
+          <a href="<?php echo esc_url($related['url']); ?>"><?php echo esc_html($related['title']); ?></a>
+        <?php endforeach; ?>
       </div>
-        <?php endif; endif; ?>
+            <?php
+        endif;
+    endif;
+    ?>
   </aside>
 </article>
 <?php
