@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.6');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.7');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.6',
+        '1.3.7',
         true
     );
     wp_script_add_data('technorapper-drawer', 'strategy', 'defer');
@@ -125,10 +125,10 @@ function technorapper_desks()
         array('apple', 'Apple'),
         array('ai', 'AI'),
         array('android', 'Android'),
-        array('comics', 'Comics'),
         array('auto', 'Auto'),
         array('pc-hardware', 'PC and Hardware'),
         array('reviews', 'Reviews'),
+        array('comics', 'Comics'),
         array('guides', 'Guides'),
         array('tech', 'News'),
     );
