@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.9
+Version: 1.3.10
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -99,9 +99,9 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       width: 180px;
     }
     .find button { background: var(--paper); color: var(--ink); border: 0; padding: 8px 12px; font-weight: 700; cursor: pointer; }
-    .nav { border-top: 1px solid #332c52; overflow: hidden; }
-    .nav .wrap { display: flex; gap: 18px; overflow-x: auto; align-items: center; }
-    .nav a { color: #d9d2ea; font-weight: 600; font-size: 14px; padding: 12px 0; white-space: nowrap; border-bottom: 2px solid transparent; }
+    .nav { border-top: 1px solid #332c52; }
+    .nav .wrap { display: flex; align-items: stretch; }
+    .nav a { color: #d9d2ea; font-weight: 700; font-size: 15px; line-height: 1.15; padding: 18px 0; white-space: nowrap; border-bottom: 3px solid transparent; }
     .nav a[aria-current="page"], .nav a:hover { color: #fff; border-bottom-color: var(--accent-bright); }
     main#content { padding: 22px 0 48px; }
     .board {
@@ -416,7 +416,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
 /* WordPress chrome */
 .skip { position: absolute; left: -999px; top: 0; }
 .skip:focus { left: 20px; top: 8px; background: #fff; color: var(--ink); padding: 8px 12px; z-index: 9; }
-.nav .wrap ul { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; overflow-x: auto; align-items: center; }
+.nav .wrap ul { display: flex; justify-content: space-between; gap: 8px; width: 100%; min-width: 0; list-style: none; margin: 0; padding: 0; overflow-x: auto; align-items: stretch; }
 .nav .wrap li { margin: 0; }
 .nav .current-menu-item > a, .nav .current-category-ancestor > a { color: #fff; border-bottom-color: var(--accent-bright); }
 .screen-reader-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
