@@ -48,12 +48,12 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.12');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.3.13');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
         array(),
-        '1.3.12',
+        '1.3.13',
         true
     );
     wp_script_add_data('technorapper-drawer', 'strategy', 'defer');
@@ -226,15 +226,46 @@ function technorapper_home_layout($posts, $desks)
     }
 
     $hero = $posts ? $posts[0] : null;
+    $hero_id = $hero ? (int) $hero->ID : 0;
     $side = array();
+    $comics_post = null;
+    if (!empty($by_slug['comics'])) {
+        foreach ($by_slug['comics'] as $candidate) {
+            if ((int) $candidate->ID !== $hero_id) {
+                $comics_post = $candidate;
+                break;
+            }
+        }
+    }
+    $side_limit = $comics_post ? 2 : 3;
     foreach ($desks as $desk) {
-        if (count($side) >= 3) {
+        if (count($side) >= $side_limit) {
             break;
         }
-        if (empty($by_slug[$desk[0]])) {
+        if ($desk[0] === 'comics' || empty($by_slug[$desk[0]])) {
             continue;
         }
-        $side[] = $by_slug[$desk[0]][0];
+        foreach ($by_slug[$desk[0]] as $candidate) {
+            $candidate_id = (int) $candidate->ID;
+            if ($candidate_id === $hero_id) {
+                continue;
+            }
+            $already = false;
+            foreach ($side as $picked) {
+                if ((int) $picked->ID === $candidate_id) {
+                    $already = true;
+                    break;
+                }
+            }
+            if ($already) {
+                continue;
+            }
+            $side[] = $candidate;
+            break;
+        }
+    }
+    if ($comics_post) {
+        $side[] = $comics_post;
     }
 
     $used = array();
