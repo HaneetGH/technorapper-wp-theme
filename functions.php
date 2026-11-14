@@ -125,6 +125,7 @@ function technorapper_desks()
         array('apple', 'Apple'),
         array('ai', 'AI'),
         array('android', 'Android'),
+        array('comics', 'Comics'),
         array('auto', 'Auto'),
         array('pc-hardware', 'PC and Hardware'),
         array('reviews', 'Reviews'),
