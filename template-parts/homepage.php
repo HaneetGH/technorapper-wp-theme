@@ -67,8 +67,9 @@ $hero_posts = get_posts(array(
 $hero = $hero_posts ? $hero_posts[0] : null;
 $side = array();
 
-foreach (array('apple', 'ai', 'android') as $side_slug) {
-    $side_term = technorapper_desk_term($side_slug);
+foreach (technorapper_desks() as $desk) {
+    if (count($side) >= 3) { break; }
+    $side_term = technorapper_desk_term($desk[0]);
     if (!$side_term) { continue; }
     $side_posts = get_posts(array(
         'post_type' => 'post',
@@ -165,13 +166,11 @@ foreach ($side as $hero_side_post) { $GLOBALS['technorapper_home_used_ids'][] = 
   </section>
 
   <?php
-  foreach (array(
-      array('ai', 'AI Desk'),
-      array('apple', 'Apple Desk'),
-      array('android', 'Android Desk'),
-      array('reviews', 'Reviews'),
-  ) as $section) {
-      technorapper_home_section($section[0], $section[1], 4);
+  foreach (technorapper_desks() as $desk) {
+      $slug = $desk[0];
+      $term = technorapper_desk_term($slug);
+      if (!$term) { continue; }
+      technorapper_home_section($slug, $term->name . ' Desk', 4);
   }
   ?>
 
