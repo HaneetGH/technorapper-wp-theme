@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.11
+Version: 1.3.12
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -203,11 +203,14 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
     .card:hover strong, .card-link:hover strong { color: var(--accent); }
     .card.lead {
       grid-column: 1 / -1;
-      display: flex;
+      display: block;
+      overflow: hidden;
+    }
+    .card.lead .card-link {
       flex-direction: row;
       align-items: flex-start;
       gap: 16px;
-      overflow: hidden;
+      width: 100%;
     }
     .card.lead .pic {
       flex: 1.35 1 0;
@@ -388,7 +391,8 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       .rail-row { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .desk-link { min-width: 168px; border: 1px solid var(--line); padding: 10px 12px; background: var(--card); }
       .feed { grid-template-columns: 1fr; }
-      .card.lead { flex-direction: column; overflow: visible; }
+      .card.lead { overflow: visible; }
+      .card.lead .card-link { flex-direction: column; }
       .card.lead .pic { flex: none; width: 100%; max-height: none; }
       .card.lead .copy { flex: none; max-height: none; overflow: visible; }
       .card.lead strong { font-size: 24px; -webkit-line-clamp: unset; }
