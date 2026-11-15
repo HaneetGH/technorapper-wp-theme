@@ -693,6 +693,174 @@ html:not(.js) .drawer-sub { display: block; }
   .drawer-backdrop { transition: opacity 220ms ease, visibility 220ms ease; }
 }
 
+
+/* 1.4.0 AI newsroom homepage */
+.ai-newsroom{
+  position:relative;
+  margin-top:46px;
+  padding:30px;
+  overflow:hidden;
+  background:var(--bar);
+  color:#fff;
+  border:1px solid #2f294b;
+}
+.ai-newsroom::before{
+  content:"";
+  position:absolute;
+  width:420px;
+  height:420px;
+  top:-260px;
+  right:-120px;
+  border:1px solid rgba(200,182,255,.18);
+  border-radius:50%;
+  box-shadow:0 0 0 60px rgba(200,182,255,.025),0 0 0 120px rgba(200,182,255,.02);
+  pointer-events:none;
+}
+.ai-newsroom-head{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);
+  gap:34px;
+  align-items:end;
+}
+.ai-newsroom-head h2{
+  max-width:760px;
+  margin:4px 0 0;
+  color:#fff;
+  font-size:clamp(28px,4vw,46px);
+  line-height:1.02;
+  letter-spacing:-.045em;
+}
+.ai-newsroom-intro{
+  margin:0;
+  color:#cfc6e4;
+  font-family:Georgia,"Iowan Old Style",Palatino,serif;
+  font-size:16px;
+  line-height:1.5;
+}
+.ai-flow{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);
+  gap:10px;
+  align-items:stretch;
+  margin-top:28px;
+}
+.ai-agent{
+  position:relative;
+  min-height:146px;
+  padding:15px;
+  background:rgba(255,255,255,.055);
+  border:1px solid #3a335c;
+  display:flex;
+  flex-direction:column;
+  transition:transform 180ms ease,border-color 180ms ease,background 180ms ease;
+}
+.ai-agent:hover{
+  transform:translateY(-3px);
+  border-color:var(--accent-bright);
+  background:rgba(255,255,255,.09);
+}
+.ai-agent-number{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  margin-bottom:17px;
+  border:1px solid var(--accent-bright);
+  color:var(--accent-bright);
+  font-family:ui-monospace,Menlo,monospace;
+  font-size:10px;
+  font-weight:800;
+}
+.ai-agent-copy{display:flex;flex-direction:column;min-width:0}
+.ai-agent-label{
+  color:var(--accent-bright);
+  font-family:ui-monospace,Menlo,monospace;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.ai-agent-copy h3{
+  margin:4px 0 0;
+  color:#fff;
+  font-size:17px;
+  line-height:1.1;
+}
+.ai-agent-copy p{
+  margin:7px 0 0;
+  color:#a99fbf;
+  font-size:12px;
+  line-height:1.35;
+}
+.ai-flow-arrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--accent-bright);
+  font-size:20px;
+  font-weight:800;
+}
+.ai-newsroom-foot{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-top:22px;
+  padding-top:16px;
+  border-top:1px solid #332c52;
+}
+.ai-newsroom-foot strong{
+  color:var(--accent-bright);
+  font-size:15px;
+  letter-spacing:-.01em;
+}
+.ai-newsroom-foot span{
+  color:#9f96b8;
+  font-family:ui-monospace,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+@media(max-width:1100px){
+  .ai-newsroom{padding:26px 22px 22px}
+  .ai-newsroom-head{grid-template-columns:1fr;gap:14px}
+  .ai-flow{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+  }
+  .ai-flow-arrow{display:none}
+  .ai-agent{min-height:150px}
+}
+@media(max-width:640px){
+  .ai-newsroom{margin-top:34px;padding:22px 16px 18px}
+  .ai-newsroom-head h2{font-size:30px}
+  .ai-newsroom-intro{font-size:15px}
+  .ai-flow{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:2px 1px 8px;
+    scroll-snap-type:x mandatory;
+  }
+  .ai-agent{
+    flex:0 0 76%;
+    min-height:142px;
+    scroll-snap-align:start;
+  }
+  .ai-newsroom-foot{align-items:flex-start;flex-direction:column;gap:6px}
+}
+@media(prefers-reduced-motion:reduce){
+  .ai-agent{transition:none}
+}
+
+
 /* 1.4.0 AI newsroom identity */
 .ai-newsroom-status{color:var(--accent-bright);font-weight:800;letter-spacing:.1em}
 .ai-newsroom-status span{font-size:8px;margin-right:4px}

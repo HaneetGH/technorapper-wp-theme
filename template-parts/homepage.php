@@ -225,6 +225,8 @@ $ai_stats = technorapper_ai_wire_home_stats();
   </section>
   <?php endif; ?>
 
+  <?php get_template_part('template-parts/ai-newsroom'); ?>
+
   <?php
   foreach ($home['sections'] as $section) {
       $slug = $section[0];
