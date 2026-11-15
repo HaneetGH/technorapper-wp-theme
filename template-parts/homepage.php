@@ -138,6 +138,41 @@ $ai_stats = technorapper_ai_wire_home_stats();
     </section>
   <?php wp_reset_postdata(); endif; ?>
 
+  <div class="home-ad"><?php technorapper_ad_header(); ?></div>
+
+  <section class="latest-section" aria-label="Latest technology news">
+    <div class="section-head">
+      <div>
+        <span class="section-kicker">Fresh from the newsroom</span>
+        <h2>Latest</h2>
+      </div>
+      <?php $news_term = technorapper_desk_term('tech'); ?>
+      <a class="section-more" href="<?php echo esc_url($news_term ? get_category_link($news_term) : home_url('/')); ?>">All stories <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="latest-grid">
+      <?php
+      foreach ($latest as $post) :
+          $GLOBALS['post'] = $post;
+          setup_postdata($post);
+      ?>
+        <article class="latest-item">
+          <a href="<?php the_permalink(); ?>">
+            <div class="latest-thumb">
+              <?php $img = technorapper_first_image($post); if ($img) echo technorapper_img($img, get_the_title()); ?>
+            </div>
+            <div>
+              <span class="beat"><?php echo esc_html(($cat = get_the_category()) && isset($cat[0]) ? $cat[0]->name : 'News'); ?></span>
+              <h3><?php the_title(); ?></h3>
+              <p><?php echo esc_html(technorapper_card_text($post, 16)); ?></p>
+              <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('M j, Y')); ?></time>
+            </div>
+          </a>
+        </article>
+      <?php endforeach; wp_reset_postdata(); ?>
+    </div>
+  </section>
+
   <?php if ($ai_stats) : ?>
   <section id="ai-newsroom" class="ai-signal-section" aria-labelledby="ai-signal-title">
     <div class="ai-signal-intro">
@@ -189,41 +224,6 @@ $ai_stats = technorapper_ai_wire_home_stats();
     <p class="ai-signal-footer">Less noise. More signal. <span>Being first isn't enough. Being worth reading is.</span></p>
   </section>
   <?php endif; ?>
-
-  <div class="home-ad"><?php technorapper_ad_header(); ?></div>
-
-  <section class="latest-section" aria-label="Latest technology news">
-    <div class="section-head">
-      <div>
-        <span class="section-kicker">Fresh from the newsroom</span>
-        <h2>Latest</h2>
-      </div>
-      <?php $news_term = technorapper_desk_term('tech'); ?>
-      <a class="section-more" href="<?php echo esc_url($news_term ? get_category_link($news_term) : home_url('/')); ?>">All stories <span aria-hidden="true">→</span></a>
-    </div>
-
-    <div class="latest-grid">
-      <?php
-      foreach ($latest as $post) :
-          $GLOBALS['post'] = $post;
-          setup_postdata($post);
-      ?>
-        <article class="latest-item">
-          <a href="<?php the_permalink(); ?>">
-            <div class="latest-thumb">
-              <?php $img = technorapper_first_image($post); if ($img) echo technorapper_img($img, get_the_title()); ?>
-            </div>
-            <div>
-              <span class="beat"><?php echo esc_html(($cat = get_the_category()) && isset($cat[0]) ? $cat[0]->name : 'News'); ?></span>
-              <h3><?php the_title(); ?></h3>
-              <p><?php echo esc_html(technorapper_card_text($post, 16)); ?></p>
-              <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('M j, Y')); ?></time>
-            </div>
-          </a>
-        </article>
-      <?php endforeach; wp_reset_postdata(); ?>
-    </div>
-  </section>
 
   <?php
   foreach ($home['sections'] as $section) {
