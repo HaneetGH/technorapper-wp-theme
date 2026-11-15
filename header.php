@@ -3,6 +3,17 @@
 <head>
   <meta charset="<?php bloginfo('charset'); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <?php
+  add_filter('pre_get_document_title', function ($title) {
+      if (is_front_page()) {
+          return 'TechnoRapper — The Smart Tech Newsroom';
+      }
+      if (is_singular('post')) {
+          return get_the_title() . ' | TechnoRapper — Smart Tech Newsroom';
+      }
+      return $title;
+  }, 20);
+  ?>
   <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -12,6 +23,7 @@
   <div class="utils">
     <div class="wrap">
       <span><?php echo esc_html(wp_date('l, j F Y')); ?></span>
+      <span class="ai-newsroom-status"><span aria-hidden="true">●</span> AI NEWSROOM</span>
       <a href="<?php echo esc_url(home_url('/feed/')); ?>">RSS</a>
     </div>
   </div>
@@ -24,9 +36,10 @@
     <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
       <span>
         <span class="wordmark">Techno<em>Rapper</em></span>
-        <span class="tag">Technology news, reviews &amp; guides · since 2012</span>
+        <span class="tag">Smart technology news · AI newsroom · since 2012</span>
       </span>
     </a>
+    <a class="ai-newsroom-link" href="<?php echo esc_url(home_url('/#ai-newsroom')); ?>">AI Newsroom <span aria-hidden="true">→</span></a>
     <form class="find" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
       <label class="screen-reader-text" for="s">Search stories</label>
       <input id="s" type="search" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="Search stories">
