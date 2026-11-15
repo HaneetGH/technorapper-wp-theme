@@ -225,6 +225,53 @@ $ai_stats = technorapper_ai_wire_home_stats();
   </section>
   <?php endif; ?>
 
+  <section class="ai-newsroom" aria-labelledby="ai-newsroom-title">
+    <div class="ai-newsroom-intro">
+      <div>
+        <span class="section-kicker">The TechnoRapper AI Newsroom</span>
+        <h2 id="ai-newsroom-title">14 years of tech. Now powered by a newsroom of AI agents.</h2>
+      </div>
+      <p>Every story you read on TechnoRapper passes through our AI-powered editorial pipeline — from discovering what is happening to researching, evaluating, writing and quality-checking what deserves your attention.</p>
+    </div>
+
+    <div class="ai-newsroom-flow" aria-label="How every TechnoRapper story is processed">
+      <div class="ai-agent">
+        <span class="ai-agent-icon">01</span>
+        <span class="ai-agent-title">Discover</span>
+        <span class="ai-agent-copy">Finds emerging stories across our source network.</span>
+      </div>
+      <span class="ai-flow-arrow" aria-hidden="true">→</span>
+      <div class="ai-agent">
+        <span class="ai-agent-icon">02</span>
+        <span class="ai-agent-title">Research</span>
+        <span class="ai-agent-copy">Builds context from the available information.</span>
+      </div>
+      <span class="ai-flow-arrow" aria-hidden="true">→</span>
+      <div class="ai-agent">
+        <span class="ai-agent-icon">03</span>
+        <span class="ai-agent-title">Evaluate</span>
+        <span class="ai-agent-copy">Assesses relevance, impact and reader value.</span>
+      </div>
+      <span class="ai-flow-arrow" aria-hidden="true">→</span>
+      <div class="ai-agent">
+        <span class="ai-agent-icon">04</span>
+        <span class="ai-agent-title">Write</span>
+        <span class="ai-agent-copy">Turns the selected research into a clear story.</span>
+      </div>
+      <span class="ai-flow-arrow" aria-hidden="true">→</span>
+      <div class="ai-agent">
+        <span class="ai-agent-icon">05</span>
+        <span class="ai-agent-title">Quality Gate</span>
+        <span class="ai-agent-copy">Checks the story before it reaches the site.</span>
+      </div>
+    </div>
+
+    <div class="ai-newsroom-foot">
+      <span>AI-powered editorial pipeline</span>
+      <strong>Less noise. More signal.</strong>
+    </div>
+  </section>
+
   <?php
   foreach ($home['sections'] as $section) {
       $slug = $section[0];
