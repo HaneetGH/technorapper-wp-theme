@@ -22,21 +22,21 @@ function technorapper_ai_wire_home_stats()
     }
 
     $since = gmdate('Y-m-d H:i:s', time() - (30 * DAY_IN_SECONDS));
-    $today = gmdate('Y-m-d 00:00:00');
+    $week_start = gmdate('Y-m-d H:i:s', time() - (7 * DAY_IN_SECONDS));
     $stats = $wpdb->get_row(
         $wpdb->prepare(
             "SELECT
                 COUNT(*) AS discovered,
                 SUM(CASE WHEN review_json IS NOT NULL AND review_json <> '' THEN 1 ELSE 0 END) AS evaluated,
                 SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) AS published,
-                SUM(CASE WHEN created_at >= %s THEN 1 ELSE 0 END) AS discovered_today,
-                SUM(CASE WHEN created_at >= %s AND review_json IS NOT NULL AND review_json <> '' THEN 1 ELSE 0 END) AS evaluated_today,
-                SUM(CASE WHEN created_at >= %s AND status = 'published' THEN 1 ELSE 0 END) AS published_today
+                SUM(CASE WHEN created_at >= %s THEN 1 ELSE 0 END) AS discovered_week,
+                SUM(CASE WHEN created_at >= %s AND review_json IS NOT NULL AND review_json <> '' THEN 1 ELSE 0 END) AS evaluated_week,
+                SUM(CASE WHEN created_at >= %s AND status = 'published' THEN 1 ELSE 0 END) AS published_week
              FROM {$items_table}
              WHERE created_at >= %s",
-            $today,
-            $today,
-            $today,
+            $week_start,
+            $week_start,
+            $week_start,
             $since
         ),
         ARRAY_A
@@ -57,13 +57,13 @@ function technorapper_ai_wire_home_stats()
     }
 
     return array(
-        'discovered'       => (int) ($stats['discovered'] ?? 0),
-        'evaluated'        => (int) ($stats['evaluated'] ?? 0),
-        'rejected'         => $rejected,
-        'published'        => (int) ($stats['published'] ?? 0),
-        'discovered_today' => (int) ($stats['discovered_today'] ?? 0),
-        'evaluated_today'  => (int) ($stats['evaluated_today'] ?? 0),
-        'published_today'  => (int) ($stats['published_today'] ?? 0),
+        'discovered'      => (int) ($stats['discovered'] ?? 0),
+        'evaluated'       => (int) ($stats['evaluated'] ?? 0),
+        'rejected'        => $rejected,
+        'published'       => (int) ($stats['published'] ?? 0),
+        'discovered_week' => (int) ($stats['discovered_week'] ?? 0),
+        'evaluated_week'  => (int) ($stats['evaluated_week'] ?? 0),
+        'published_week'  => (int) ($stats['published_week'] ?? 0),
     );
 }
 
@@ -299,13 +299,13 @@ foreach ($desk_row as $desk) {
     $desk_posts[] = array($slug, $desk[1], $post);
 }
 
-$sources_today = $ai_stats ? max((int) $ai_stats['discovered_today'], (int) $ai_stats['evaluated_today']) : null;
-$claims_today = $ai_stats ? (int) $ai_stats['evaluated_today'] : null;
+$sources_week = $ai_stats ? max((int) $ai_stats['discovered_week'], (int) $ai_stats['evaluated_week']) : null;
+$claims_week = $ai_stats ? (int) $ai_stats['evaluated_week'] : null;
 $review_label = 'Standing by';
 if ($ai_stats) {
-    if ((int) $ai_stats['published_today'] > 0) {
+    if ((int) $ai_stats['published_week'] > 0) {
         $review_label = 'Complete';
-    } elseif ((int) $ai_stats['evaluated_today'] > 0) {
+    } elseif ((int) $ai_stats['evaluated_week'] > 0) {
         $review_label = 'In progress';
     }
 }
@@ -324,17 +324,17 @@ if ($ai_stats) {
       </div>
     </div>
 
-    <aside class="tr-brief-today" aria-label="AI Wire today">
+    <aside class="tr-brief-today" aria-label="AI Wire last week">
       <div class="tr-brief-today__mesh" aria-hidden="true"></div>
-      <div class="tr-brief-today__label">AI Wire <span aria-hidden="true">•</span> Today</div>
+      <div class="tr-brief-today__label">AI Wire <span aria-hidden="true">•</span> Last week</div>
       <dl class="tr-brief-today__stats">
         <div>
           <dt>Sources compared</dt>
-          <dd><?php echo esc_html($sources_today !== null ? number_format_i18n($sources_today) : '—'); ?></dd>
+          <dd><?php echo esc_html($sources_week !== null ? number_format_i18n($sources_week) : '—'); ?></dd>
         </div>
         <div>
           <dt>Claims checked</dt>
-          <dd><?php echo esc_html($claims_today !== null ? number_format_i18n($claims_today) : '—'); ?></dd>
+          <dd><?php echo esc_html($claims_week !== null ? number_format_i18n($claims_week) : '—'); ?></dd>
         </div>
         <div>
           <dt>Editor reviewed</dt>
