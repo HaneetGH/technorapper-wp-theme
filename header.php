@@ -42,7 +42,10 @@
     <form class="find" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
       <label class="screen-reader-text" for="s">Search stories</label>
       <input id="s" type="search" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="Search stories">
-      <button type="submit">Search</button>
+      <button type="submit" aria-label="Search stories">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+        <span class="screen-reader-text">Search</span>
+      </button>
     </form>
   </div>
   <nav class="nav" aria-label="Sections">
