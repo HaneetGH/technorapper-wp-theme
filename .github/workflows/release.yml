@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
+      - production-1.3.13
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: theme-release-main
+  group: theme-release-production
   cancel-in-progress: false
 
 jobs:
