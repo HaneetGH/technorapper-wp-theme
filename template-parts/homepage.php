@@ -103,21 +103,20 @@ $ai_stats = technorapper_ai_wire_home_stats();
 ?>
 
 <div class="home-shell">
-  <?php if ($ai_stats) : ?>
   <section id="tr-pulse" class="ai-newsroom-banner tr-pulse" aria-labelledby="tr-pulse-title">
     <div class="ai-newsroom-copy">
-      <div class="tr-pulse-brand"><span class="tr-pulse-mark" aria-hidden="true">ϟ</span><span>TR <em>PULSE</em></span></div>
+      <div class="tr-pulse-brand"><span class="tr-pulse-mark" aria-hidden="true">ϟ</span><span id="tr-pulse-title">TR <em>PULSE</em></span></div>
       <p class="tr-pulse-dek">Technology, science &amp; comics — discovered, evaluated and verified by AI Wire.</p>
     </div>
 
     <div class="ai-newsroom-metrics" aria-label="Last 30 days AI Wire metrics">
-      <div><strong><?php echo esc_html(number_format_i18n($ai_stats['discovered'])); ?></strong><span>Discovered</span></div>
+      <div><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['discovered']) : '—'); ?></strong><span>Discovered</span></div>
       <i aria-hidden="true"></i>
-      <div><strong><?php echo esc_html(number_format_i18n($ai_stats['evaluated'])); ?></strong><span>Evaluated</span></div>
+      <div><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['evaluated']) : '—'); ?></strong><span>Evaluated</span></div>
       <i aria-hidden="true"></i>
-      <div><strong><?php echo esc_html(number_format_i18n($ai_stats['published'])); ?></strong><span>Published</span></div>
+      <div><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['published']) : '—'); ?></strong><span>Published</span></div>
       <i aria-hidden="true"></i>
-      <div class="ai-rejected"><strong><?php echo esc_html(number_format_i18n($ai_stats['rejected'])); ?></strong><span>Rejected</span></div>
+      <div class="ai-rejected"><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['rejected']) : '—'); ?></strong><span>Rejected</span></div>
     </div>
 
     <div class="ai-newsroom-agents" aria-label="AI Wire publishing pipeline">
@@ -129,9 +128,8 @@ $ai_stats = technorapper_ai_wire_home_stats();
       <span><b>6</b> Publish</span>
     </div>
 
-    <a class="ai-newsroom-how" href="<?php echo esc_url(home_url('/ai-wire/')); ?>">How AI Wire Works <span aria-hidden="true">→</span></a>
+    <a class="ai-newsroom-how" href="<?php echo esc_url('https://github.com/HaneetGH/technorapper-ai-wire#end-to-end-pipeline'); ?>" target="_blank" rel="noopener noreferrer">How AI Wire Works <span aria-hidden="true">→</span></a>
   </section>
-  <?php endif; ?>
 
   <?php if ($hero) : $GLOBALS['post'] = $hero; setup_postdata($hero); ?>
     <section class="home-hero" aria-label="Top stories">
@@ -204,16 +202,16 @@ $ai_stats = technorapper_ai_wire_home_stats();
       </div>
 
       <aside class="ai-wire-card" aria-label="AI Wire">
-        <div class="ai-wire-icon" aria-hidden="true">◇</div>
+        <div class="ai-wire-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M16 3 29 10 16 17 3 10 16 3Z"></path><path d="m3 16 13 7 13-7M3 22l13 7 13-7"></path></svg></div>
         <div>
           <span class="section-kicker">AI Wire</span>
           <h3>The AI-powered publishing engine behind TechnoRapper.</h3>
           <ul>
             <li>Multiple trusted sources</li>
             <li>AI research &amp; verification</li>
-            <li>Human review &amp; quality gate</li>
+            <li>Independent AI review &amp; quality gate</li>
           </ul>
-          <a href="<?php echo esc_url(home_url('/ai-wire/')); ?>">How AI Wire Works <span aria-hidden="true">→</span></a>
+          <a href="<?php echo esc_url('https://github.com/HaneetGH/technorapper-ai-wire#end-to-end-pipeline'); ?>" target="_blank" rel="noopener noreferrer">How AI Wire Works <span aria-hidden="true">→</span></a>
         </div>
       </aside>
     </div>
