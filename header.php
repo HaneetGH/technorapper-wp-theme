@@ -25,7 +25,6 @@
   <div class="utils">
     <div class="wrap">
       <span><?php echo esc_html(wp_date('l, j F Y')); ?></span>
-      <?php if (class_exists('TechnoRapper_AI_Wire')) : ?>,      <span class="ai-newsroom-status"><span aria-hidden="true">●</span> AI NEWSROOM</span>,      <?php endif; ?>
       <a href="<?php echo esc_url(home_url('/feed/')); ?>">RSS</a>
     </div>
   </div>
@@ -37,14 +36,16 @@
         <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
       <span>
         <span class="wordmark">Techno<em>Rapper</em></span>
-        <span class="tag">Smart technology news · AI newsroom · since 2012</span>
+        <span class="tag">Technology, science &amp; comics · since 2012</span>
       </span>
     </a>
-    <?php if (class_exists('TechnoRapper_AI_Wire')) : ?>,    <a class="ai-newsroom-link" href="<?php echo esc_url(home_url('/#ai-newsroom')); ?>">AI Newsroom <span aria-hidden="true">→</span></a>,    <?php endif; ?>
     <form class="find" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
       <label class="screen-reader-text" for="s">Search stories</label>
       <input id="s" type="search" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="Search stories">
-      <button type="submit" aria-label="Search stories">,        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>,        <span class="screen-reader-text">Search</span>,      </button>
+      <button type="submit" aria-label="Search stories">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+        <span class="screen-reader-text">Search</span>
+      </button>
     </form>
   </div>
   <nav class="nav" aria-label="Sections">
