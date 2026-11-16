@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.16
+Version: 1.3.18
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -1240,4 +1240,197 @@ html:not(.js) .drawer-sub { display: block; }
   .ai-newsroom-agents span{min-height:42px;padding:7px 4px;font-size:8px}
   .ai-newsroom-agents b{width:21px;height:21px;flex-basis:21px}
   .ai-newsroom-banner + .home-hero .hero-copy h1{font-size:25px}
+}
+
+
+/* 1.3.17 — final enterprise composition correction.
+ * The previous responsive pass left the desktop pipeline compressed into one
+ * horizontal strip and relied on an implicit latest-grid layout. Define the
+ * layout explicitly so the hierarchy is deterministic across browsers.
+ */
+.ai-newsroom-banner{
+  display:grid;
+  grid-template-columns:minmax(300px,1.05fr) minmax(360px,1.2fr) minmax(0,1fr) auto;
+  align-items:center;
+  gap:20px;
+  padding:20px 22px;
+}
+.ai-newsroom-agents{
+  grid-column:1 / -1;
+  grid-row:2;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:12px;
+  width:100%;
+}
+.ai-newsroom-agents span{
+  min-height:46px;
+  padding:9px 14px;
+  font-size:11px;
+}
+.ai-newsroom-how{
+  min-height:46px;
+  padding:12px 18px;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.latest-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 300px;
+  gap:30px;
+  align-items:start;
+}
+.latest-layout .latest-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 24px;
+  min-width:0;
+}
+.latest-layout .latest-item{
+  min-width:0;
+  padding:18px 0;
+}
+.latest-layout .latest-item>a{
+  display:block;
+}
+.latest-layout .latest-thumb{
+  width:100%;
+  aspect-ratio:16/10;
+  margin-bottom:10px;
+}
+.latest-layout .latest-item h3{
+  font-size:20px;
+  line-height:1.18;
+}
+.latest-layout .latest-item p{
+  font-size:14px;
+  line-height:1.45;
+}
+.ai-wire-card{
+  position:sticky;
+  top:158px;
+  min-width:0;
+  padding:26px 24px;
+}
+.ai-wire-card .ai-wire-title{font-size:30px}
+.ai-wire-card .ai-wire-intro{font-size:15px;line-height:1.45}
+.ai-wire-card li{font-size:14px;margin:11px 0}
+.ai-wire-card>a{min-height:46px;padding:12px 16px;font-size:12px}
+
+@media(max-width:1200px){
+  .ai-newsroom-banner{
+    grid-template-columns:minmax(250px,1fr) minmax(340px,1.2fr) auto;
+  }
+  .ai-newsroom-agents{grid-column:1 / -1;}
+  .ai-newsroom-how{display:flex;}
+}
+@media(max-width:900px){
+  .ai-newsroom-banner{
+    grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);
+  }
+  .ai-newsroom-agents{grid-column:1 / -1;}
+  .ai-newsroom-how{display:none;}
+  .latest-layout{grid-template-columns:1fr 280px;gap:22px;}
+}
+@media(max-width:760px){
+  .ai-newsroom-banner{
+    grid-template-columns:1fr;
+    padding:14px;
+    gap:10px;
+  }
+  .ai-newsroom-agents{
+    grid-column:auto;
+    grid-row:auto;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:7px;
+  }
+  .ai-newsroom-agents span{
+    min-height:44px;
+    padding:8px 7px;
+    justify-content:center;
+    font-size:9px;
+  }
+  .latest-layout{grid-template-columns:1fr;gap:18px;}
+  .latest-layout .latest-grid{
+    grid-template-columns:1fr;
+    gap:0;
+  }
+  .latest-layout .latest-item{padding:16px 0;}
+  .latest-layout .latest-item>a{
+    display:grid;
+    grid-template-columns:38% minmax(0,1fr);
+    gap:14px;
+    align-items:start;
+  }
+  .latest-layout .latest-thumb{
+    margin-bottom:0;
+    aspect-ratio:16/10;
+  }
+  .latest-layout .latest-item h3{font-size:18px;}
+  .latest-layout .latest-item p{display:block;font-size:13px;}
+  .ai-wire-card{position:static;padding:22px 20px;}
+}
+@media(max-width:520px){
+  .ai-newsroom-agents{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:7px 5px;
+  }
+  .ai-newsroom-agents span{
+    min-height:44px;
+    padding:8px 4px;
+    font-size:9px;
+  }
+  .latest-layout .latest-item>a{
+    grid-template-columns:38% minmax(0,1fr);
+    gap:12px;
+  }
+  .latest-layout .latest-item h3{font-size:16px;}
+  .latest-layout .latest-item p{font-size:12px;}
+}
+
+
+/* 1.3.18 — platform-specific polish.
+ * Desktop keeps the enterprise TR Pulse hierarchy. Mobile deliberately reduces
+ * the pulse footprint and restores the original 1.3.13 hero proportions/type.
+ */
+@media (max-width: 760px){
+  .ai-newsroom-agents span:after{display:none}
+  .ai-newsroom-banner{
+    padding:10px 11px;
+    gap:7px;
+    margin-bottom:10px;
+  }
+  .tr-pulse-brand{font-size:22px;line-height:1.05}
+  .tr-pulse-mark{font-size:24px}
+  .tr-pulse-dek{margin-top:3px;font-size:10px;line-height:1.25}
+  .ai-newsroom-metrics{gap:3px}
+  .ai-newsroom-metrics i{height:30px}
+  .ai-newsroom-metrics strong{font-size:19px;line-height:1}
+  .ai-newsroom-metrics span{font-size:6.5px;letter-spacing:.07em}
+  .ai-newsroom-agents{gap:5px}
+  .ai-newsroom-agents span{
+    min-height:36px;
+    padding:6px 5px;
+    font-size:8px;
+    border-radius:999px;
+  }
+  .ai-newsroom-agents b{width:19px;height:19px;flex-basis:19px;font-size:10px}
+  /* Preserve the pre-TR-Pulse mobile hero composition. */
+  .ai-newsroom-banner + .home-hero .hero-media{aspect-ratio:16/9}
+  .ai-newsroom-banner + .home-hero .hero-copy{padding:17px 16px 19px}
+  .ai-newsroom-banner + .home-hero .hero-copy h1{font-size:31px;line-height:1.02}
+  .ai-newsroom-banner + .home-hero .hero-copy p{font-size:16px;line-height:1.5}
+}
+@media (max-width: 520px){
+  .ai-newsroom-banner{padding:9px 10px;gap:6px}
+  .tr-pulse-brand{font-size:20px}
+  .tr-pulse-mark{font-size:22px}
+  .tr-pulse-dek{font-size:10px}
+  .ai-newsroom-metrics strong{font-size:18px}
+  .ai-newsroom-metrics span{font-size:7.5px;letter-spacing:.04em}
+  .ai-newsroom-agents{gap:5px}
+  .ai-newsroom-agents span{min-height:42px;padding:6px 4px;font-size:9px}
+  .ai-newsroom-agents b{width:18px;height:18px;flex-basis:18px}
+  .ai-newsroom-banner + .home-hero .hero-copy h1{font-size:31px}
 }
