@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.6.1
+Version: 1.7.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -1349,4 +1349,77 @@ main#content{padding:20px 0 48px}
   .latest-layout .latest-item h3{font-size:14px}
   .latest-layout .latest-item p{display:none}
   .ai-wire-card{padding:17px 15px}
+}
+
+
+/* 1.7.0 review fixes — fit the real theme container and match the reference. */
+.tr-pulse{
+  grid-template-columns:minmax(190px,1.05fr) minmax(230px,1fr) minmax(240px,1.1fr) auto;
+  gap:12px;
+}
+.nav a{padding:15px 0}
+.find{align-items:center}
+.find input{
+  width:320px;
+  border:1px solid #4b455c;
+  border-right:0;
+  border-radius:6px 0 0 6px;
+  padding:10px 13px;
+}
+.find button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:42px;
+  min-width:42px;
+  height:40px;
+  padding:8px;
+  border:1px solid #4b455c;
+  border-left:0;
+  border-radius:0 6px 6px 0;
+  background:transparent;
+  color:#fff;
+}
+.find button:hover{background:#33264a;color:#fff}
+.find button svg{
+  display:block;
+  width:19px;
+  height:19px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.latest-layout .latest-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:0 14px;
+}
+.ai-wire-icon{
+  transform:none;
+  border:0;
+  border-radius:0;
+}
+.ai-wire-icon svg{
+  width:34px;
+  height:34px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+@media(max-width:1100px){
+  .tr-pulse{
+    grid-template-columns:minmax(190px,1.05fr) minmax(230px,1fr) minmax(240px,1.1fr);
+  }
+  .find input{width:min(32vw,320px)}
+}
+@media(max-width:900px){
+  .latest-layout .latest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:680px){
+  .find{width:100%}
+  .find input{width:auto;flex:1;min-width:0}
+  .latest-layout .latest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
