@@ -299,16 +299,9 @@ foreach ($desk_row as $desk) {
     $desk_posts[] = array($slug, $desk[1], $post);
 }
 
-$sources_week = $ai_stats ? max((int) $ai_stats['discovered_week'], (int) $ai_stats['evaluated_week']) : null;
-$claims_week = $ai_stats ? (int) $ai_stats['evaluated_week'] : null;
-$review_label = 'Standing by';
-if ($ai_stats) {
-    if ((int) $ai_stats['published_week'] > 0) {
-        $review_label = 'Complete';
-    } elseif ((int) $ai_stats['evaluated_week'] > 0) {
-        $review_label = 'In progress';
-    }
-}
+$checked_week = $ai_stats ? (int) $ai_stats['discovered_week'] : null;
+$validated_week = $ai_stats ? (int) $ai_stats['evaluated_week'] : null;
+$published_week = $ai_stats ? (int) $ai_stats['published_week'] : null;
 ?>
 
 <div class="home-shell home-shell--brief">
@@ -329,23 +322,16 @@ if ($ai_stats) {
       <div class="tr-brief-today__label">AI Wire <span aria-hidden="true">•</span> Last week</div>
       <dl class="tr-brief-today__stats">
         <div>
-          <dt>Sources compared</dt>
-          <dd><?php echo esc_html($sources_week !== null ? number_format_i18n($sources_week) : '—'); ?></dd>
+          <dt>Checked</dt>
+          <dd><?php echo esc_html($checked_week !== null ? number_format_i18n($checked_week) : '—'); ?></dd>
         </div>
         <div>
-          <dt>Claims checked</dt>
-          <dd><?php echo esc_html($claims_week !== null ? number_format_i18n($claims_week) : '—'); ?></dd>
+          <dt>Validated</dt>
+          <dd><?php echo esc_html($validated_week !== null ? number_format_i18n($validated_week) : '—'); ?></dd>
         </div>
         <div>
-          <dt>Editor reviewed</dt>
-          <dd class="tr-brief-today__status<?php echo $review_label === 'Complete' ? ' is-complete' : ''; ?>">
-            <?php if ($review_label === 'Complete') : ?>
-              <span class="tr-brief-check" aria-hidden="true"></span>
-              <span class="screen-reader-text"><?php echo esc_html($review_label); ?></span>
-            <?php else : ?>
-              <?php echo esc_html($review_label); ?>
-            <?php endif; ?>
-          </dd>
+          <dt>Published</dt>
+          <dd><?php echo esc_html($published_week !== null ? number_format_i18n($published_week) : '—'); ?></dd>
         </div>
       </dl>
     </aside>
