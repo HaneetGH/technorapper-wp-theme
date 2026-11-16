@@ -100,10 +100,15 @@ function technorapper_lead_evidence($post)
                 }
                 foreach ($gate[$key] as $issue) {
                     $line = trim(wp_strip_all_tags((string) $issue));
-                    if ($line !== '') {
-                        $unclear = $line;
-                        break 2;
+                    if ($line === '') {
+                        continue;
                     }
+                    // Skip internal quality notes — they read poorly on the homepage.
+                    if (preg_match('/\b(title|headline|slug|seo|malformed|incomplete|truncated)\b/i', $line)) {
+                        continue;
+                    }
+                    $unclear = $line;
+                    break 2;
                 }
             }
         }
@@ -120,10 +125,12 @@ function technorapper_lead_evidence($post)
         $unclear = 'secondary implications';
     }
 
-    // Keep the unclear clause short enough for a single pill.
+    // Keep the unclear clause short enough for one pill line.
     $unclear = preg_replace('/\s+/', ' ', $unclear);
-    if (strlen($unclear) > 42) {
-        $unclear = rtrim(substr($unclear, 0, 39)) . '…';
+    if (function_exists('mb_strimwidth')) {
+        $unclear = mb_strimwidth($unclear, 0, 28, '…', 'UTF-8');
+    } elseif (strlen($unclear) > 28) {
+        $unclear = rtrim(substr($unclear, 0, 25)) . '…';
     }
 
     return array(
@@ -279,9 +286,9 @@ if ($ai_stats) {
         <p class="tr-lead-summary"><?php echo esc_html(technorapper_card_text($hero, 36)); ?></p>
         <p class="tr-evidence-pill" aria-label="Evidence">
           <span class="tr-evidence-pill__icon" aria-hidden="true">i</span>
-          <span><strong>Confirmed:</strong> <?php echo esc_html($evidence['confirmed']); ?></span>
-          <span class="tr-evidence-pill__sep" aria-hidden="true">•</span>
-          <span><strong>Unclear:</strong> <?php echo esc_html($evidence['unclear']); ?></span>
+          <span class="tr-evidence-pill__part"><span class="tr-evidence-pill__k">Confirmed</span> <?php echo esc_html($evidence['confirmed']); ?></span>
+          <span class="tr-evidence-pill__sep" aria-hidden="true">·</span>
+          <span class="tr-evidence-pill__part"><span class="tr-evidence-pill__k">Unclear</span> <?php echo esc_html($evidence['unclear']); ?></span>
         </p>
       </div>
     </article>
