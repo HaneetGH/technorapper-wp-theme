@@ -103,6 +103,8 @@ $ai_stats = technorapper_ai_wire_home_stats();
 $pulse_classes = function_exists('technorapper_pulse_classes')
     ? technorapper_pulse_classes()
     : array('ai-newsroom-banner', 'tr-pulse', 'is-desktop-compact', 'is-mobile-minimal', 'show-desktop-dek', 'show-desktop-metrics', 'show-desktop-pipeline', 'show-desktop-cta', 'hide-mobile-dek', 'show-mobile-metrics', 'hide-mobile-pipeline', 'show-mobile-cta');
+// On-site AI Wire explainer served by the AI Wire plugin (pretty permalink /ai-wire/).
+$how_ai_url = home_url('/ai-wire/');
 ?>
 
 <div class="home-shell">
@@ -143,7 +145,7 @@ $pulse_classes = function_exists('technorapper_pulse_classes')
       <span><b>6</b> Publish</span>
     </div>
 
-    <a class="ai-newsroom-how" href="<?php echo esc_url('https://github.com/HaneetGH/technorapper-ai-wire#end-to-end-pipeline'); ?>" target="_blank" rel="noopener noreferrer">How AI Wire Works <span aria-hidden="true">→</span></a>
+    <a class="ai-newsroom-how" href="<?php echo esc_url($how_ai_url); ?>">How AI Wire Works <span aria-hidden="true">→</span></a>
   </section>
 
   <?php if ($hero) : $GLOBALS['post'] = $hero; setup_postdata($hero); ?>
@@ -226,7 +228,7 @@ $pulse_classes = function_exists('technorapper_pulse_classes')
             <li>AI research &amp; verification</li>
             <li>Independent AI review &amp; quality gate</li>
           </ul>
-          <a href="<?php echo esc_url('https://github.com/HaneetGH/technorapper-ai-wire#end-to-end-pipeline'); ?>" target="_blank" rel="noopener noreferrer">How AI Wire Works <span aria-hidden="true">→</span></a>
+          <a href="<?php echo esc_url($how_ai_url); ?>">How AI Wire Works <span aria-hidden="true">→</span></a>
         </div>
       </aside>
     </div>
