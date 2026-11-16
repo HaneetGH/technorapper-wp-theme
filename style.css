@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.17
+Version: 1.3.18
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -1387,4 +1387,49 @@ html:not(.js) .drawer-sub { display: block; }
   }
   .latest-layout .latest-item h3{font-size:16px;}
   .latest-layout .latest-item p{font-size:12px;}
+}
+
+
+/* 1.3.18 — platform-specific polish.
+ * Desktop keeps the enterprise TR Pulse hierarchy. Mobile deliberately reduces
+ * the pulse footprint and restores the original 1.3.13 hero proportions/type.
+ */
+@media (max-width: 760px){
+  .ai-newsroom-banner{
+    padding:10px 11px;
+    gap:7px;
+    margin-bottom:10px;
+  }
+  .tr-pulse-brand{font-size:22px;line-height:1.05}
+  .tr-pulse-mark{font-size:24px}
+  .tr-pulse-dek{margin-top:3px;font-size:10px;line-height:1.25}
+  .ai-newsroom-metrics{gap:3px}
+  .ai-newsroom-metrics i{height:30px}
+  .ai-newsroom-metrics strong{font-size:19px;line-height:1}
+  .ai-newsroom-metrics span{font-size:6.5px;letter-spacing:.07em}
+  .ai-newsroom-agents{gap:5px}
+  .ai-newsroom-agents span{
+    min-height:36px;
+    padding:6px 5px;
+    font-size:8px;
+    border-radius:999px;
+  }
+  .ai-newsroom-agents b{width:19px;height:19px;flex-basis:19px;font-size:10px}
+  /* Preserve the pre-TR-Pulse mobile hero composition. */
+  .ai-newsroom-banner + .home-hero .hero-media{aspect-ratio:16/9}
+  .ai-newsroom-banner + .home-hero .hero-copy{padding:17px 16px 19px}
+  .ai-newsroom-banner + .home-hero .hero-copy h1{font-size:31px;line-height:1.02}
+  .ai-newsroom-banner + .home-hero .hero-copy p{font-size:16px;line-height:1.5}
+}
+@media (max-width: 520px){
+  .ai-newsroom-banner{padding:9px 10px;gap:6px}
+  .tr-pulse-brand{font-size:20px}
+  .tr-pulse-mark{font-size:22px}
+  .tr-pulse-dek{font-size:9px}
+  .ai-newsroom-metrics strong{font-size:18px}
+  .ai-newsroom-metrics span{font-size:6px}
+  .ai-newsroom-agents{gap:5px}
+  .ai-newsroom-agents span{min-height:34px;padding:5px 3px;font-size:7.5px}
+  .ai-newsroom-agents b{width:18px;height:18px;flex-basis:18px}
+  .ai-newsroom-banner + .home-hero .hero-copy h1{font-size:31px}
 }
