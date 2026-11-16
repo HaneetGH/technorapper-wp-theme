@@ -7,10 +7,10 @@
   <?php
   add_filter('pre_get_document_title', function ($title) {
       if (is_front_page()) {
-          return 'TechnoRapper — The Smart Tech Newsroom';
+          return 'TechnoRapper — AI Agent Tech News';
       }
       if (is_singular('post')) {
-          return get_the_title() . ' | TechnoRapper — Smart Tech Newsroom';
+          return get_the_title() . ' | TechnoRapper — AI Agent Tech News';
       }
       return $title;
   }, 20);
@@ -36,7 +36,7 @@
         <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
       <span>
         <span class="wordmark">Techno<em>Rapper</em></span>
-        <span class="tag">Technology, science &amp; comics · since 2012</span>
+        <span class="tag">Tech news, run by AI Wire agents</span>
       </span>
     </a>
     <form class="find" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">

@@ -48,7 +48,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.6.6');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.7.0');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
@@ -1205,7 +1205,7 @@ function technorapper_drawer()
         <?php endforeach; ?>
       </nav>
       <?php endif; ?>
-      <p class="drawer-copy">© <?php echo esc_html(wp_date('Y')); ?> TechnoRapper · Since 2012</p>
+      <p class="drawer-copy">© <?php echo esc_html(wp_date('Y')); ?> TechnoRapper · Powered by AI Wire</p>
     </aside>
     <?php
 }
