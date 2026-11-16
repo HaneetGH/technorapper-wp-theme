@@ -48,7 +48,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.6.4');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.6.5');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
@@ -838,6 +838,108 @@ function technorapper_content_ads($content)
 }
 add_filter('the_content', 'technorapper_content_ads', 30);
 
+/**
+ * Allowed TR Pulse density values for desktop and mobile Customizer settings.
+ */
+function technorapper_pulse_layout_choices()
+{
+    return array(
+        'full'    => 'Full',
+        'compact' => 'Compact',
+        'minimal' => 'Minimal',
+    );
+}
+
+function technorapper_sanitize_pulse_layout($value)
+{
+    $value = sanitize_key((string) $value);
+    $choices = technorapper_pulse_layout_choices();
+    return isset($choices[$value]) ? $value : 'compact';
+}
+
+/**
+ * Read a TR Pulse layout for one viewport. Mobile and desktop are independent.
+ *
+ * @param string $device desktop|mobile
+ * @return string full|compact|minimal
+ */
+function technorapper_pulse_layout($device = 'desktop')
+{
+    $device = ($device === 'mobile') ? 'mobile' : 'desktop';
+    $defaults = array(
+        'desktop' => 'compact',
+        'mobile'  => 'minimal',
+    );
+    $value = get_theme_mod('tr_pulse_' . $device . '_layout', $defaults[$device]);
+    $value = technorapper_sanitize_pulse_layout($value);
+    return apply_filters('technorapper_pulse_' . $device . '_layout', $value);
+}
+
+/**
+ * Whether a TR Pulse part should render for one viewport.
+ * Size (full/compact/minimal) only changes density; these toggles control parts.
+ *
+ * @param string $device desktop|mobile
+ * @param string $part  dek|metrics|pipeline|cta
+ * @return bool
+ */
+function technorapper_pulse_shows($device, $part)
+{
+    $device = ($device === 'mobile') ? 'mobile' : 'desktop';
+    $part = sanitize_key((string) $part);
+    $defaults = array(
+        'desktop' => array(
+            'dek'      => true,
+            'metrics'  => true,
+            'pipeline' => true,
+            'cta'      => true,
+        ),
+        'mobile' => array(
+            'dek'      => false,
+            'metrics'  => true,
+            'pipeline' => false,
+            'cta'      => true,
+        ),
+    );
+    if (!isset($defaults[$device][$part])) {
+        return false;
+    }
+
+    $mod = 'tr_pulse_' . $device . '_show_' . $part;
+    $value = (bool) get_theme_mod($mod, $defaults[$device][$part]);
+    return (bool) apply_filters('technorapper_pulse_' . $device . '_show_' . $part, $value);
+}
+
+/**
+ * Classes that apply independent desktop and mobile TR Pulse presentation.
+ */
+function technorapper_pulse_classes()
+{
+    $desktop = technorapper_pulse_layout('desktop');
+    $mobile = technorapper_pulse_layout('mobile');
+    $classes = array(
+        'ai-newsroom-banner',
+        'tr-pulse',
+        'is-desktop-' . $desktop,
+        'is-mobile-' . $mobile,
+    );
+
+    foreach (array('dek', 'metrics', 'pipeline', 'cta') as $part) {
+        if (technorapper_pulse_shows('desktop', $part)) {
+            $classes[] = 'show-desktop-' . $part;
+        } else {
+            $classes[] = 'hide-desktop-' . $part;
+        }
+        if (technorapper_pulse_shows('mobile', $part)) {
+            $classes[] = 'show-mobile-' . $part;
+        } else {
+            $classes[] = 'hide-mobile-' . $part;
+        }
+    }
+
+    return apply_filters('technorapper_pulse_classes', $classes);
+}
+
 function technorapper_customize_register($wp_customize)
 {
     $wp_customize->add_section('technorapper_ads', array(
@@ -888,6 +990,71 @@ function technorapper_customize_register($wp_customize)
         'section'     => 'technorapper_desks',
         'type'        => 'text',
     ));
+
+    $wp_customize->add_section('technorapper_pulse', array(
+        'title'       => 'TR Pulse',
+        'description' => 'Desktop and mobile are separate. Minimal keeps the banner short on phones so the lead story stays higher.',
+    ));
+
+    $layout_choices = technorapper_pulse_layout_choices();
+    $devices = array(
+        'desktop' => array(
+            'label'   => 'Desktop',
+            'layout'  => 'compact',
+            'parts'   => array(
+                'dek'      => true,
+                'metrics'  => true,
+                'pipeline' => true,
+                'cta'      => true,
+            ),
+        ),
+        'mobile' => array(
+            'label'   => 'Mobile',
+            'layout'  => 'minimal',
+            'parts'   => array(
+                'dek'      => false,
+                'metrics'  => true,
+                'pipeline' => false,
+                'cta'      => true,
+            ),
+        ),
+    );
+    $part_labels = array(
+        'dek'      => 'Show description',
+        'metrics'  => 'Show metrics',
+        'pipeline' => 'Show pipeline steps',
+        'cta'      => 'Show How AI Wire Works',
+    );
+
+    foreach ($devices as $device => $config) {
+        $layout_id = 'tr_pulse_' . $device . '_layout';
+        $wp_customize->add_setting($layout_id, array(
+            'default'           => $config['layout'],
+            'sanitize_callback' => 'technorapper_sanitize_pulse_layout',
+        ));
+        $wp_customize->add_control($layout_id, array(
+            'label'       => $config['label'] . ' size',
+            'description' => $device === 'mobile'
+                ? 'Controls padding and type on phones. Use the checkboxes below to hide parts.'
+                : 'Compact matches the thin desktop strip. Full adds more padding.',
+            'section'     => 'technorapper_pulse',
+            'type'        => 'select',
+            'choices'     => $layout_choices,
+        ));
+
+        foreach ($part_labels as $part => $part_label) {
+            $part_id = 'tr_pulse_' . $device . '_show_' . $part;
+            $wp_customize->add_setting($part_id, array(
+                'default'           => $config['parts'][$part],
+                'sanitize_callback' => 'wp_validate_boolean',
+            ));
+            $wp_customize->add_control($part_id, array(
+                'label'   => $config['label'] . ': ' . $part_label,
+                'section' => 'technorapper_pulse',
+                'type'    => 'checkbox',
+            ));
+        }
+    }
 }
 add_action('customize_register', 'technorapper_customize_register');
 
