@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.6.2
+Version: 1.6.3
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -706,9 +706,9 @@ html:not(.js) .drawer-sub { display: block; }
     "pipeline"
     "cta";
   align-items:center;
-  gap:8px;
-  margin:0 0 12px;
-  padding:12px;
+  gap:6px;
+  margin:0 0 10px;
+  padding:8px 10px;
   border:1px solid #e5d9f5;
   border-radius:10px;
   overflow:hidden;
@@ -750,11 +750,11 @@ html:not(.js) .drawer-sub { display: block; }
   line-height:1;
 }
 .tr-pulse-dek{
-  margin:4px 0 0;
-  max-width:42ch;
+  margin:2px 0 0;
+  max-width:46ch;
   color:#3e374e;
   font-size:12px;
-  line-height:1.35;
+  line-height:1.25;
   font-weight:600;
 }
 .ai-newsroom-metrics{
@@ -778,10 +778,10 @@ html:not(.js) .drawer-sub { display: block; }
 }
 .ai-newsroom-metrics span{
   display:block;
-  margin-top:3px;
+  margin-top:2px;
   color:#4e465c;
   font-size:10px;
-  line-height:1.15;
+  line-height:1.1;
   font-weight:800;
   letter-spacing:0;
   text-transform:uppercase;
@@ -790,16 +790,16 @@ html:not(.js) .drawer-sub { display: block; }
   flex:0 0 1px;
   width:1px;
   align-self:center;
-  height:32px;
+  height:26px;
   background:#cfc2df;
   font-size:0;
 }
 .ai-newsroom-metrics .ai-rejected strong{color:#ef3f35}
 .ai-newsroom-metrics svg{
   display:block;
-  width:16px;
-  height:16px;
-  margin:0 auto 3px;
+  width:14px;
+  height:14px;
+  margin:0 auto 2px;
   fill:none;
   stroke:#6f25ff;
   stroke-width:2;
@@ -811,7 +811,7 @@ html:not(.js) .drawer-sub { display: block; }
 .ai-newsroom-agents{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:6px;
+  gap:4px;
 }
 .ai-newsroom-agents span{
   position:relative;
@@ -820,8 +820,8 @@ html:not(.js) .drawer-sub { display: block; }
   justify-content:center;
   gap:4px;
   min-width:0;
-  min-height:36px;
-  padding:6px 6px;
+  min-height:30px;
+  padding:4px 6px;
   border:1px solid #e5d9f5;
   border-radius:999px;
   background:#fff;
@@ -836,9 +836,9 @@ html:not(.js) .drawer-sub { display: block; }
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  flex:0 0 18px;
-  width:18px;
-  height:18px;
+  flex:0 0 16px;
+  width:16px;
+  height:16px;
   border-radius:50%;
   background:#6f25ff;
   color:#fff;
@@ -849,8 +849,8 @@ html:not(.js) .drawer-sub { display: block; }
   align-items:center;
   justify-content:center;
   gap:6px;
-  min-height:44px;
-  padding:10px 16px;
+  min-height:36px;
+  padding:7px 12px;
   border:1px solid #6f25ff;
   border-radius:999px;
   color:#fff;
@@ -1068,19 +1068,19 @@ html:not(.js) .drawer-sub { display: block; }
       "copy cta"
       "metrics metrics"
       "pipeline pipeline";
-    gap:10px 16px;
-    padding:14px 16px;
+    gap:6px 14px;
+    padding:8px 12px;
   }
-  .ai-newsroom-how{justify-self:end;min-width:168px;white-space:nowrap}
-  .tr-pulse-brand{font-size:24px}
-  .tr-pulse-mark{font-size:26px}
-  .tr-pulse-dek{font-size:13px}
-  .ai-newsroom-metrics{gap:8px}
-  .ai-newsroom-metrics strong{font-size:22px}
-  .ai-newsroom-metrics span{font-size:11px;letter-spacing:.04em}
-  .ai-newsroom-metrics svg{width:18px;height:18px}
-  .ai-newsroom-agents{gap:8px}
-  .ai-newsroom-agents span{min-height:40px;padding:7px 8px;font-size:13px}
+  .ai-newsroom-how{justify-self:end;min-width:0;min-height:34px;padding:6px 12px;font-size:13px;white-space:nowrap}
+  .tr-pulse-brand{font-size:22px}
+  .tr-pulse-mark{font-size:24px}
+  .tr-pulse-dek{font-size:12px}
+  .ai-newsroom-metrics{gap:6px}
+  .ai-newsroom-metrics strong{font-size:20px}
+  .ai-newsroom-metrics span{font-size:10px;letter-spacing:.02em}
+  .ai-newsroom-metrics svg{width:14px;height:14px}
+  .ai-newsroom-agents{gap:4px}
+  .ai-newsroom-agents span{min-height:30px;padding:4px 8px;font-size:12px}
   .latest-layout .latest-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}
   .latest-layout .latest-item>a{display:block}
   .latest-layout .latest-thumb{margin-bottom:10px;aspect-ratio:16/10}
@@ -1095,22 +1095,22 @@ html:not(.js) .drawer-sub { display: block; }
     grid-template-areas:
       "copy metrics cta"
       "pipeline pipeline pipeline";
-    gap:12px 20px;
-    padding:16px 18px;
+    gap:6px 16px;
+    padding:8px 14px;
   }
-  .tr-pulse-brand{font-size:28px}
-  .tr-pulse-mark{font-size:32px}
-  .tr-pulse-dek{max-width:34ch;font-size:13px}
-  .ai-newsroom-metrics{justify-content:center;gap:10px}
-  .ai-newsroom-metrics strong{font-size:26px}
-  .ai-newsroom-metrics i{height:40px}
-  .ai-newsroom-agents{grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
-  .ai-newsroom-agents span{min-height:42px;font-size:13px}
+  .tr-pulse-brand{font-size:24px}
+  .tr-pulse-mark{font-size:26px}
+  .tr-pulse-dek{max-width:none;font-size:12px}
+  .ai-newsroom-metrics{justify-content:center;gap:8px}
+  .ai-newsroom-metrics strong{font-size:22px}
+  .ai-newsroom-metrics i{height:28px}
+  .ai-newsroom-agents{grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+  .ai-newsroom-agents span{min-height:32px;font-size:12px}
   .ai-newsroom-agents span:not(:last-child):after{
     content:"→";
     position:absolute;
     top:50%;
-    left:calc(100% + 9px);
+    left:calc(100% + 7px);
     transform:translate(-50%,-50%);
     color:#6f25ff;
     font-size:14px;
@@ -1118,7 +1118,7 @@ html:not(.js) .drawer-sub { display: block; }
     line-height:1;
     pointer-events:none;
   }
-  .ai-newsroom-how{min-height:44px;padding:11px 16px;font-size:14px}
+  .ai-newsroom-how{min-height:32px;padding:6px 12px;font-size:13px}
   .find input{width:280px}
   .latest-layout{grid-template-columns:minmax(0,1fr) 280px;gap:24px}
   .ai-wire-card{position:sticky;top:158px}
@@ -1127,9 +1127,9 @@ html:not(.js) .drawer-sub { display: block; }
   .ai-newsroom-banner + .home-hero .hero-copy p{font-size:15px}
 }
 @media(min-width:1200px){
-  .ai-newsroom-banner{padding:18px 20px}
-  .tr-pulse-brand{font-size:30px}
-  .ai-newsroom-metrics strong{font-size:28px}
+  .ai-newsroom-banner{padding:8px 16px}
+  .tr-pulse-brand{font-size:26px}
+  .ai-newsroom-metrics strong{font-size:22px}
   .latest-layout{grid-template-columns:minmax(0,1fr) 300px;gap:28px}
   .latest-layout .latest-item h3{font-size:19px}
   .ai-wire-card{padding:24px 22px}
@@ -1137,7 +1137,7 @@ html:not(.js) .drawer-sub { display: block; }
 }
 @media(max-width:699px){
   .site-header .nav{display:none}
-  .ai-newsroom-banner{padding:10px}
+  .ai-newsroom-banner{padding:8px 10px}
   .ai-newsroom-banner + .home-hero .hero-media:after{content:none}
   .ai-newsroom-banner + .home-hero .hero-copy{
     position:static;
