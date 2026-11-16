@@ -759,6 +759,65 @@ function technorapper_ad_header()
     technorapper_ad_leader();
 }
 
+/**
+ * Auto ads sometimes insert a banner above the homepage hero. Keep that
+ * revenue, but move any unit that lands on the hero into the slot below it.
+ */
+function technorapper_home_ad_guard()
+{
+    if (!is_front_page()) {
+        return;
+    }
+    ?>
+    <script>
+    (function () {
+      var slot = document.querySelector('.home-ad');
+      var hero = document.querySelector('.home-hero');
+      if (!slot || !hero) return;
+      var parking = false;
+
+      function park(node) {
+        if (!node || node === slot || slot.contains(node) || node.contains(slot)) return;
+        if (node.getAttribute('data-tr-parked') === '1') return;
+        node.setAttribute('data-tr-parked', '1');
+        node.style.position = 'static';
+        node.style.inset = 'auto';
+        node.style.transform = 'none';
+        node.style.zIndex = 'auto';
+        node.style.width = '100%';
+        node.style.maxWidth = '100%';
+        node.style.margin = '0';
+        slot.appendChild(node);
+      }
+
+      function sweep() {
+        if (parking) return;
+        parking = true;
+        var heroTop = hero.getBoundingClientRect().top;
+        var nodes = document.querySelectorAll('.google-auto-placed, ins.adsbygoogle');
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i].closest('.google-auto-placed') || nodes[i];
+          if (slot.contains(node)) continue;
+          if (node.closest('#tr-pulse, .home-hero')) {
+            park(node);
+            continue;
+          }
+          var box = node.getBoundingClientRect();
+          if (box.height > 40 && box.top < heroTop - 4) park(node);
+        }
+        parking = false;
+      }
+
+      sweep();
+      var observer = new MutationObserver(sweep);
+      observer.observe(document.body, {childList: true, subtree: true});
+      window.setTimeout(function () { observer.disconnect(); }, 12000);
+    })();
+    </script>
+    <?php
+}
+add_action('wp_footer', 'technorapper_home_ad_guard', 20);
+
 function technorapper_content_ads($content)
 {
     if (is_admin() || is_feed() || !is_singular('post') || !in_the_loop() || !is_main_query()) {
