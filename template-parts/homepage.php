@@ -68,30 +68,32 @@ function technorapper_ai_wire_home_stats()
 }
 
 /**
- * Concise evidence lines for the lead story strip.
+ * Compact evidence pill labels for the lead story.
+ * Prefer short telegraph-style phrases over multi-line cards.
  */
 function technorapper_lead_evidence($post)
 {
-    $confirmed = array();
-    $unclear = array();
+    $source_count = 0;
+    $unclear = '';
 
     if ($post && !empty($post->ID)) {
-        $takeaways = json_decode((string) get_post_meta((int) $post->ID, '_tr_ai_wire_takeaways', true), true);
-        if (is_array($takeaways)) {
-            foreach ($takeaways as $item) {
-                $line = trim(wp_strip_all_tags((string) $item));
-                if ($line === '') {
-                    continue;
-                }
-                if (count($confirmed) < 2) {
-                    $confirmed[] = $line;
-                }
+        $sources = get_post_meta((int) $post->ID, '_tr_ai_wire_sources', true);
+        if (is_array($sources)) {
+            $source_count = count($sources);
+        } elseif (is_string($sources) && $sources !== '') {
+            $decoded = json_decode($sources, true);
+            if (is_array($decoded)) {
+                $source_count = count($decoded);
             }
+        }
+
+        $takeaways = json_decode((string) get_post_meta((int) $post->ID, '_tr_ai_wire_takeaways', true), true);
+        if (!$source_count && is_array($takeaways)) {
+            $source_count = min(3, count($takeaways));
         }
 
         $gate = get_post_meta((int) $post->ID, '_tr_ai_wire_prepublish_gate', true);
         if (is_array($gate)) {
-            $warnings = array();
             foreach (array('warnings', 'blocking_issues', 'soft_issues') as $key) {
                 if (empty($gate[$key]) || !is_array($gate[$key])) {
                     continue;
@@ -99,39 +101,34 @@ function technorapper_lead_evidence($post)
                 foreach ($gate[$key] as $issue) {
                     $line = trim(wp_strip_all_tags((string) $issue));
                     if ($line !== '') {
-                        $warnings[] = $line;
+                        $unclear = $line;
+                        break 2;
                     }
                 }
             }
-            if ($warnings) {
-                $unclear[] = $warnings[0];
-            }
-            $status = strtoupper((string) ($gate['status'] ?? ''));
-            if ($status !== '' && $status !== 'PASS' && $status !== 'OK') {
-                $unclear[] = 'Editor review flagged residual uncertainty before publish.';
-            }
         }
 
-        if (get_post_meta((int) $post->ID, '_tr_ai_wire_queue_id', true)) {
-            if (!$confirmed) {
-                $confirmed[] = 'Source attribution checked through the AI Wire pipeline.';
-            }
-            if (!$unclear) {
-                $unclear[] = 'Broader market impact and follow-on claims remain open.';
-            }
+        if ($unclear === '' && get_post_meta((int) $post->ID, '_tr_ai_wire_queue_id', true)) {
+            $unclear = 'follow-on claims';
         }
     }
 
-    if (!$confirmed) {
-        $confirmed[] = 'Core reporting drawn from the linked primary coverage.';
+    if ($source_count < 1) {
+        $source_count = 1;
     }
-    if (!$unclear) {
-        $unclear[] = 'Secondary implications still developing.';
+    if ($unclear === '') {
+        $unclear = 'secondary implications';
+    }
+
+    // Keep the unclear clause short enough for a single pill.
+    $unclear = preg_replace('/\s+/', ' ', $unclear);
+    if (strlen($unclear) > 42) {
+        $unclear = rtrim(substr($unclear, 0, 39)) . '…';
     }
 
     return array(
-        'confirmed' => array_slice(array_values(array_unique($confirmed)), 0, 2),
-        'unclear'   => array_slice(array_values(array_unique($unclear)), 0, 2),
+        'confirmed' => sprintf(_n('%d source', '%d sources', $source_count, 'technorapper'), $source_count),
+        'unclear'   => $unclear,
     );
 }
 
@@ -222,17 +219,19 @@ if ($ai_stats) {
 
 <div class="home-shell home-shell--brief">
   <section class="tr-brief-hero" aria-labelledby="tr-brief-title">
+    <div class="tr-brief-hero__glow" aria-hidden="true"></div>
     <div class="tr-brief-hero__main">
-      <p class="tr-brief-eyebrow">AI-assisted. Editor-reviewed.</p>
+      <p class="tr-brief-eyebrow"><span class="tr-brief-eyebrow__dash" aria-hidden="true"></span> AI-assisted. Editor-reviewed.</p>
       <h1 id="tr-brief-title">Technology, with the signal separated from the noise.</h1>
       <p class="tr-brief-dek">The AI Wire newsroom compares trusted sources, checks claims against the record, and keeps human editorial standards in the loop before a story lands on TechnoRapper.</p>
       <div class="tr-brief-actions">
-        <a class="tr-brief-btn tr-brief-btn--primary" href="#today-brief">Explore today’s brief</a>
-        <a class="tr-brief-btn tr-brief-btn--ghost" href="<?php echo esc_url($how_ai_url); ?>">How AI Wire works</a>
+        <a class="tr-brief-btn tr-brief-btn--primary" href="#today-brief">Explore today’s brief <span aria-hidden="true">→</span></a>
+        <a class="tr-brief-link" href="<?php echo esc_url($how_ai_url); ?>">How AI Wire works</a>
       </div>
     </div>
 
     <aside class="tr-brief-today" aria-label="AI Wire today">
+      <div class="tr-brief-today__mesh" aria-hidden="true"></div>
       <div class="tr-brief-today__label">AI Wire <span aria-hidden="true">•</span> Today</div>
       <dl class="tr-brief-today__stats">
         <div>
@@ -244,8 +243,15 @@ if ($ai_stats) {
           <dd><?php echo esc_html($claims_today !== null ? number_format_i18n($claims_today) : '—'); ?></dd>
         </div>
         <div>
-          <dt>Editor review</dt>
-          <dd class="tr-brief-today__status"><?php echo esc_html($review_label); ?></dd>
+          <dt>Editor reviewed</dt>
+          <dd class="tr-brief-today__status<?php echo $review_label === 'Complete' ? ' is-complete' : ''; ?>">
+            <?php if ($review_label === 'Complete') : ?>
+              <span class="tr-brief-check" aria-hidden="true"></span>
+              <span class="screen-reader-text"><?php echo esc_html($review_label); ?></span>
+            <?php else : ?>
+              <?php echo esc_html($review_label); ?>
+            <?php endif; ?>
+          </dd>
         </div>
       </dl>
     </aside>
@@ -266,29 +272,17 @@ if ($ai_stats) {
       </a>
       <div class="tr-lead-copy">
         <div class="tr-lead-meta">
-          <span class="beat"><?php echo esc_html(($lead_cat && isset($lead_cat[0])) ? $lead_cat[0]->name : 'Top Story'); ?></span>
+          <span class="tr-lead-desk"><?php echo esc_html(($lead_cat && isset($lead_cat[0])) ? $lead_cat[0]->name : 'Top Story'); ?></span>
           <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('M j, Y')); ?></time>
         </div>
         <h2 class="tr-lead-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
         <p class="tr-lead-summary"><?php echo esc_html(technorapper_card_text($hero, 36)); ?></p>
-        <div class="tr-evidence" aria-label="Evidence strip">
-          <div class="tr-evidence__col tr-evidence__col--confirmed">
-            <span class="tr-evidence__label">Confirmed</span>
-            <ul>
-              <?php foreach ($evidence['confirmed'] as $line) : ?>
-                <li><?php echo esc_html($line); ?></li>
-              <?php endforeach; ?>
-            </ul>
-          </div>
-          <div class="tr-evidence__col tr-evidence__col--unclear">
-            <span class="tr-evidence__label">Still unclear</span>
-            <ul>
-              <?php foreach ($evidence['unclear'] as $line) : ?>
-                <li><?php echo esc_html($line); ?></li>
-              <?php endforeach; ?>
-            </ul>
-          </div>
-        </div>
+        <p class="tr-evidence-pill" aria-label="Evidence">
+          <span class="tr-evidence-pill__icon" aria-hidden="true">i</span>
+          <span><strong>Confirmed:</strong> <?php echo esc_html($evidence['confirmed']); ?></span>
+          <span class="tr-evidence-pill__sep" aria-hidden="true">•</span>
+          <span><strong>Unclear:</strong> <?php echo esc_html($evidence['unclear']); ?></span>
+        </p>
       </div>
     </article>
   </section>
@@ -299,7 +293,6 @@ if ($ai_stats) {
         $slug = $desk_item[0];
         $label = $desk_item[1];
         $post = $desk_item[2];
-        $term = technorapper_desk_term($slug);
         if (!$post) {
             continue;
         }
@@ -319,32 +312,27 @@ if ($ai_stats) {
             ?>
           </div>
           <div class="tr-desk-card__copy">
-            <span class="beat"><?php echo esc_html($label); ?></span>
+            <span class="tr-desk-card__desk"><?php echo esc_html($label); ?></span>
             <h3><?php the_title(); ?></h3>
             <p><?php echo esc_html(technorapper_card_text($post, 18)); ?></p>
           </div>
         </a>
-        <?php if ($term) : ?>
-          <a class="tr-desk-card__more" href="<?php echo esc_url(get_category_link($term)); ?>">More in <?php echo esc_html($label); ?></a>
-        <?php endif; ?>
       </article>
     <?php endforeach; wp_reset_postdata(); ?>
   </section>
 
   <section class="home-ad-rail" aria-label="Advertisement">
     <div class="home-ad-rail__chrome">
-      <span class="home-ad-rail__mark">Advertisement</span>
-      <span class="home-ad-rail__sponsored">Sponsored</span>
+      <span class="home-ad-rail__mark"><span class="home-ad-rail__dash" aria-hidden="true"></span> Advertisement</span>
     </div>
     <div class="home-ad-banner" role="note">
+      <div class="home-ad-banner__visual" aria-hidden="true"></div>
       <div class="home-ad-banner__copy">
-        <p class="home-ad-banner__eyebrow">Phone comparison</p>
-        <h2>Find the right handset without the hype.</h2>
-        <p>Side-by-side specs, camera notes, and battery claims — kept separate from the newsroom brief.</p>
+        <p class="home-ad-banner__eyebrow">Sponsored</p>
+        <h2>Discover more / Compare phones.</h2>
       </div>
       <div class="home-ad-banner__actions">
-        <a class="tr-brief-btn tr-brief-btn--primary" href="<?php echo esc_url(home_url('/category/reviews/')); ?>">Discover more</a>
-        <a class="tr-brief-btn tr-brief-btn--ghost" href="<?php echo esc_url(home_url('/category/guides/')); ?>">Compare phones</a>
+        <a class="tr-brief-btn tr-brief-btn--primary" href="<?php echo esc_url(home_url('/category/guides/')); ?>">Compare phones <span aria-hidden="true">→</span></a>
       </div>
     </div>
     <div class="home-ad"><?php technorapper_ad_header(); ?></div>
