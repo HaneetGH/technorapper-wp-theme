@@ -25,9 +25,6 @@
   <div class="utils">
     <div class="wrap">
       <span><?php echo esc_html(wp_date('l, j F Y')); ?></span>
-      <?php if (class_exists('TechnoRapper_AI_Wire')) : ?>
-      <span class="ai-newsroom-status"><span aria-hidden="true">●</span> AI NEWSROOM</span>
-      <?php endif; ?>
       <a href="<?php echo esc_url(home_url('/feed/')); ?>">RSS</a>
     </div>
   </div>
@@ -36,16 +33,12 @@
       <span class="menu-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
       <span class="screen-reader-text">Open menu</span>
     </button>
-    <a class="home-btn" href="<?php echo esc_url(home_url('/')); ?>">Home</a>
-    <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+        <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
       <span>
         <span class="wordmark">Techno<em>Rapper</em></span>
-        <span class="tag">Smart technology news · AI newsroom · since 2012</span>
+        <span class="tag">Technology, science &amp; comics · since 2012</span>
       </span>
     </a>
-    <?php if (class_exists('TechnoRapper_AI_Wire')) : ?>
-    <a class="ai-newsroom-link" href="<?php echo esc_url(home_url('/#ai-newsroom')); ?>">AI Newsroom <span aria-hidden="true">→</span></a>
-    <?php endif; ?>
     <form class="find" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
       <label class="screen-reader-text" for="s">Search stories</label>
       <input id="s" type="search" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="Search stories">
