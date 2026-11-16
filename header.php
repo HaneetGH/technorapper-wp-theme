@@ -3,6 +3,19 @@
 <head>
   <meta charset="<?php bloginfo('charset'); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <?php if (class_exists('TechnoRapper_AI_Wire')) : ?>
+  <?php
+  add_filter('pre_get_document_title', function ($title) {
+      if (is_front_page()) {
+          return 'TechnoRapper — The Smart Tech Newsroom';
+      }
+      if (is_singular('post')) {
+          return get_the_title() . ' | TechnoRapper — Smart Tech Newsroom';
+      }
+      return $title;
+  }, 20);
+  ?>
+  <?php endif; ?>
   <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -20,17 +33,19 @@
       <span class="menu-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
       <span class="screen-reader-text">Open menu</span>
     </button>
-    <a class="home-btn" href="<?php echo esc_url(home_url('/')); ?>">Home</a>
-    <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+        <a class="brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
       <span>
         <span class="wordmark">Techno<em>Rapper</em></span>
-        <span class="tag">Technology news, reviews &amp; guides · since 2012</span>
+        <span class="tag">Technology, science &amp; comics · since 2012</span>
       </span>
     </a>
     <form class="find" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
       <label class="screen-reader-text" for="s">Search stories</label>
       <input id="s" type="search" name="s" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="Search stories">
-      <button type="submit">Search</button>
+      <button type="submit" aria-label="Search stories">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+        <span class="screen-reader-text">Search</span>
+      </button>
     </form>
   </div>
   <nav class="nav" aria-label="Sections">
