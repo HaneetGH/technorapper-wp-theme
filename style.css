@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.3.13
+Version: 1.3.14
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -691,4 +691,395 @@ html:not(.js) .drawer-sub { display: block; }
 @media (prefers-reduced-motion: no-preference) {
   .drawer { transition: transform 220ms ease, visibility 220ms ease; }
   .drawer-backdrop { transition: opacity 220ms ease, visibility 220ms ease; }
+}
+
+
+/* 1.3.14 — TR Pulse homepage composition. Ported onto the live 1.3.13 baseline. */
+.ai-newsroom-banner{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(255px,1.2fr) minmax(360px,1.55fr) minmax(330px,1.35fr) auto;
+  align-items:center;
+  gap:16px;
+  min-height:96px;
+  margin:0 0 14px;
+  padding:15px 18px;
+  border:1px solid #e5d9f5;
+  border-radius:9px;
+  overflow:hidden;
+  color:#171326;
+  background:
+    radial-gradient(circle at 78% 0%,rgba(124,44,255,.10),transparent 38%),
+    linear-gradient(105deg,#fbf7ff 0%,#f3ecff 58%,#faf7ff 100%);
+  box-shadow:0 6px 22px rgba(39,14,51,.06);
+}
+.ai-newsroom-banner:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 78% 0%,rgba(159,67,255,.10),transparent 38%);
+}
+.ai-newsroom-copy,.ai-newsroom-metrics,.ai-newsroom-agents,.ai-newsroom-how{position:relative;z-index:1}
+.ai-newsroom-copy{min-width:0}
+.tr-pulse-brand{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  color:#171326;
+  font-size:30px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-.055em;
+}
+.tr-pulse-brand em{color:#6f25ff;font-style:normal}
+.tr-pulse-mark{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#6f25ff;
+  font-size:34px;
+  line-height:1;
+}
+.tr-pulse-dek{
+  margin:7px 0 0;
+  max-width:360px;
+  color:#3e374e;
+  font-size:12px;
+  line-height:1.35;
+  font-weight:600;
+}
+.ai-newsroom-metrics{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  gap:12px;
+}
+.ai-newsroom-metrics div{
+  min-width:55px;
+  text-align:center;
+}
+.ai-newsroom-metrics strong{
+  display:block;
+  color:#171326;
+  font-size:24px;
+  line-height:1;
+  letter-spacing:-.045em;
+  font-variant-numeric:tabular-nums;
+}
+.ai-newsroom-metrics span{
+  display:block;
+  margin-top:3px;
+  color:#5f586b;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.ai-newsroom-metrics i{
+  width:1px;
+  height:42px;
+  background:#cfc2df;
+  font-size:0;
+}
+.ai-newsroom-metrics .ai-rejected strong{color:#ef3f35}
+.ai-newsroom-metrics svg{
+  display:block;
+  width:17px;
+  height:17px;
+  margin:0 auto 3px;
+  fill:none;
+  stroke:#6f25ff;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.ai-newsroom-metrics .ai-published svg{stroke:#26a84a}
+.ai-newsroom-metrics .ai-rejected svg{stroke:#ef3f35}
+.ai-newsroom-agents{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:10px;
+  min-width:0;
+}
+.ai-newsroom-agents span{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  padding:7px 8px;
+  border:1px solid #e5d9f5;
+  border-radius:999px;
+  background:#fff;
+  color:#40384c;
+  font-family:"Segoe UI",sans-serif;
+  font-size:9px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.ai-newsroom-agents span:not(:last-child):after{
+  content:"→";
+  position:absolute;
+  right:-12px;
+  top:50%;
+  transform:translate(50%,-50%);
+  color:#6f25ff;
+  font-size:13px;
+  font-weight:900;
+}
+.ai-newsroom-agents b{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:20px;
+  height:20px;
+  margin-right:4px;
+  border-radius:50%;
+  background:#6f25ff;
+  color:#fff;
+  font-size:9px;
+}
+.ai-newsroom-how{
+  justify-self:end;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+  padding:10px 14px;
+  border:1px solid #6f25ff;
+  border-radius:999px;
+  color:#fff;
+  background:#6f25ff;
+  font-size:10px;
+  font-weight:900;
+}
+.ai-newsroom-how:hover{color:#fff;background:#5317d9;border-color:#5317d9}
+
+/* Hero: image-first editorial overlay. */
+.ai-newsroom-banner + .home-hero{margin-top:4px}
+.ai-newsroom-banner + .home-hero .hero-main{position:relative;min-height:0}
+.ai-newsroom-banner + .home-hero .hero-main-link{position:relative;display:block;min-height:100%}
+.ai-newsroom-banner + .home-hero .hero-media{aspect-ratio:16/9;min-height:0}
+.ai-newsroom-banner + .home-hero .hero-media:after{
+  content:"";
+  position:absolute;
+  inset:38% 0 0;
+  background:linear-gradient(180deg,transparent 0%,rgba(12,8,22,.12) 18%,rgba(12,8,22,.92) 100%);
+  pointer-events:none;
+}
+.ai-newsroom-banner + .home-hero .hero-copy{
+  position:absolute;
+  z-index:2;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:26px 28px 24px;
+  background:linear-gradient(180deg,transparent 0%,rgba(20,13,34,.12) 8%,rgba(20,13,34,.94) 100%);
+}
+.ai-newsroom-banner + .home-hero .hero-copy h1{
+  max-width:760px;
+  margin:5px 0 9px;
+  color:#fff;
+  font-size:clamp(30px,3.5vw,48px);
+  line-height:1.03;
+}
+.ai-newsroom-banner + .home-hero .hero-copy p{
+  max-width:650px;
+  margin:0 0 10px;
+  color:#eee8f4;
+  font-size:14px;
+}
+.ai-newsroom-banner + .home-hero .hero-meta{color:#d5cce0}
+.ai-newsroom-banner + .home-hero .hero-main-link:hover h1{color:#fff}
+
+/* Latest Stories + AI Wire sidebar. */
+.latest-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 280px;
+  gap:22px;
+  align-items:start;
+}
+.latest-layout .latest-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:0 14px;
+}
+.latest-layout .latest-item{padding:14px 0}
+.latest-layout .latest-item>a{display:block}
+.latest-layout .latest-thumb{
+  width:100%;
+  aspect-ratio:16/9;
+  margin-bottom:9px;
+}
+.latest-layout .latest-item h3{font-size:17px;line-height:1.16}
+.latest-layout .latest-item p{font-size:12px}
+.ai-wire-card{
+  position:sticky;
+  top:158px;
+  padding:20px 18px;
+  border:1px solid #e5d9f5;
+  border-radius:12px;
+  background:linear-gradient(160deg,#fbf7ff 0%,#f1e9ff 100%);
+}
+.ai-wire-icon{
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:8px;
+  border:0;
+  border-radius:0;
+  color:#6f25ff;
+}
+.ai-wire-icon svg{
+  width:34px;
+  height:34px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.ai-wire-card .ai-wire-title{
+  margin:0 0 4px;
+  color:#171326;
+  font-size:25px;
+  line-height:1.1;
+}
+.ai-wire-card .ai-wire-intro{
+  margin:0 0 15px;
+  color:#393346;
+  font-size:14px;
+  line-height:1.35;
+}
+.ai-wire-card ul{list-style:none;margin:0 0 17px;padding:0}
+.ai-wire-card li{
+  position:relative;
+  margin:8px 0;
+  padding-left:20px;
+  color:#3d3749;
+  font-size:12px;
+  font-weight:700;
+}
+.ai-wire-card li:before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  color:#6f25ff;
+  font-weight:900;
+}
+.ai-wire-card>a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:10px 12px;
+  border:1px solid #6f25ff;
+  border-radius:999px;
+  color:#6f25ff;
+  font-size:11px;
+  font-weight:900;
+}
+.ai-wire-card>a:hover{color:#fff;background:#6f25ff}
+
+/* Preserve the reference's compact section header and search control. */
+.latest-section>.section-head{
+  position:relative;
+  padding:0 0 0 16px;
+  margin-bottom:12px;
+  border:0;
+}
+.latest-section>.section-head:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:1px;
+  width:5px;
+  border-radius:4px;
+  background:#7c2cff;
+}
+.latest-section>.section-head .section-kicker{display:none}
+.latest-section>.section-head h2{font-size:28px}
+.latest-section>.section-head .section-more{color:#6f25ff}
+
+.find{align-items:center}
+.find input{
+  width:320px;
+  border:1px solid #4b455c;
+  border-right:0;
+  border-radius:6px 0 0 6px;
+  padding:10px 13px;
+}
+.find button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:42px;
+  min-width:42px;
+  height:40px;
+  padding:8px;
+  border:1px solid #4b455c;
+  border-left:0;
+  border-radius:0 6px 6px 0;
+  background:transparent;
+  color:#fff;
+}
+.find button:hover{background:#33264a;color:#fff}
+.find button svg{
+  display:block;
+  width:19px;
+  height:19px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+@media(max-width:1100px){
+  .ai-newsroom-banner{
+    grid-template-columns:minmax(210px,1fr) minmax(340px,1.35fr);
+  }
+  .ai-newsroom-how{display:none}
+  .latest-layout{grid-template-columns:minmax(0,1fr) 250px}
+  .latest-layout .latest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .ai-newsroom-banner{
+    grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);
+  }
+  .ai-newsroom-agents{grid-column:1 / -1}
+  .latest-layout{grid-template-columns:1fr}
+  .ai-wire-card{position:static}
+}
+@media(max-width:680px){
+  .ai-newsroom-banner{
+    grid-template-columns:1fr;
+    min-height:0;
+    padding:14px;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .tr-pulse-brand{font-size:25px}
+  .tr-pulse-mark{font-size:29px}
+  .tr-pulse-dek{font-size:10px}
+  .ai-newsroom-metrics{justify-content:space-between;gap:5px}
+  .ai-newsroom-metrics div{min-width:0}
+  .ai-newsroom-metrics strong{font-size:19px}
+  .ai-newsroom-metrics i{height:34px}
+  .ai-newsroom-agents{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 4px}
+  .ai-newsroom-agents span{font-size:7px;padding:6px 5px}
+  .ai-newsroom-agents span:after{display:none}
+  .ai-newsroom-banner + .home-hero .hero-copy{padding:18px 16px 17px}
+  .ai-newsroom-banner + .home-hero .hero-copy h1{font-size:29px}
+  .ai-newsroom-banner + .home-hero .hero-copy p{font-size:12px}
+  .ai-newsroom-banner + .home-hero .hero-media{aspect-ratio:4/3}
+  .latest-layout .latest-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+  .latest-layout .latest-item>a{display:block}
+  .latest-layout .latest-item h3{font-size:14px}
+  .latest-layout .latest-item p{display:none}
+  .ai-wire-card{padding:17px 15px}
 }
