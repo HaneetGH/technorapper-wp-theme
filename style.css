@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: Open-source magazine theme with a photo board homepage, desk rail, hamburger side menu, paged archives, story pages, and built-in ad slots.
-Version: 1.6.4
+Version: 1.6.5
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -699,8 +699,8 @@ html:not(.js) .drawer-sub { display: block; }
 }
 
 
-/* TR Pulse homepage. One layout, mobile-first, so later passes cannot
- * reintroduce clipped pipeline text, a hidden CTA, or a stretched hero. */
+/* TR Pulse homepage. Compact mobile-first base; Customizer classes switch
+ * desktop vs mobile density and which parts stay visible per viewport. */
 .ai-newsroom-banner{
   position:relative;
   display:grid;
@@ -722,6 +722,38 @@ html:not(.js) .drawer-sub { display: block; }
     radial-gradient(circle at 78% 0%,rgba(124,44,255,.10),transparent 38%),
     linear-gradient(105deg,#fbf7ff 0%,#f3ecff 58%,#faf7ff 100%);
   box-shadow:0 6px 22px rgba(39,14,51,.06);
+}
+/* Mobile visibility (default viewport). Desktop overrides below 700px+. */
+@media(max-width:699px){
+  .tr-pulse.hide-mobile-dek .tr-pulse-dek{display:none}
+  .tr-pulse.hide-mobile-metrics .ai-newsroom-metrics{display:none}
+  .tr-pulse.hide-mobile-pipeline .ai-newsroom-agents{display:none}
+  .tr-pulse.hide-mobile-cta .ai-newsroom-how{display:none}
+  .tr-pulse.is-mobile-minimal{
+    gap:4px;
+    margin:0 0 8px;
+    padding:6px 8px;
+  }
+  .tr-pulse.is-mobile-minimal .tr-pulse-brand{font-size:18px}
+  .tr-pulse.is-mobile-minimal .tr-pulse-mark{font-size:18px}
+  .tr-pulse.is-mobile-minimal .ai-newsroom-metrics strong{font-size:16px}
+  .tr-pulse.is-mobile-minimal .ai-newsroom-metrics span{font-size:9px}
+  .tr-pulse.is-mobile-minimal .ai-newsroom-metrics svg{width:12px;height:12px}
+  .tr-pulse.is-mobile-minimal .ai-newsroom-metrics i{height:22px}
+  .tr-pulse.is-mobile-minimal .ai-newsroom-agents span{min-height:28px;padding:3px 5px;font-size:11px}
+  .tr-pulse.is-mobile-minimal .ai-newsroom-how{min-height:32px;padding:6px 10px;font-size:13px}
+  .tr-pulse.is-mobile-full{
+    gap:10px;
+    padding:12px;
+  }
+  .tr-pulse.is-mobile-full .tr-pulse-brand{font-size:22px}
+  .tr-pulse.is-mobile-full .tr-pulse-mark{font-size:24px}
+  .tr-pulse.is-mobile-full .tr-pulse-dek{margin-top:4px;font-size:13px;line-height:1.35}
+  .tr-pulse.is-mobile-full .ai-newsroom-metrics strong{font-size:20px}
+  .tr-pulse.is-mobile-full .ai-newsroom-metrics span{font-size:11px}
+  .tr-pulse.is-mobile-full .ai-newsroom-agents{gap:6px}
+  .tr-pulse.is-mobile-full .ai-newsroom-agents span{min-height:36px;padding:6px;font-size:12px}
+  .tr-pulse.is-mobile-full .ai-newsroom-how{min-height:44px;padding:10px 16px}
 }
 .ai-newsroom-banner:before{
   content:"";
@@ -1086,6 +1118,33 @@ html:not(.js) .drawer-sub { display: block; }
   .ai-newsroom-metrics svg{width:14px;height:14px}
   .ai-newsroom-agents{gap:4px}
   .ai-newsroom-agents span{min-height:30px;padding:4px 8px;font-size:12px}
+  .tr-pulse.hide-desktop-dek .tr-pulse-dek{display:none}
+  .tr-pulse.hide-desktop-metrics .ai-newsroom-metrics{display:none}
+  .tr-pulse.hide-desktop-pipeline .ai-newsroom-agents{display:none}
+  .tr-pulse.hide-desktop-cta .ai-newsroom-how{display:none}
+  .tr-pulse.show-desktop-dek .tr-pulse-dek{display:block}
+  .tr-pulse.show-desktop-metrics .ai-newsroom-metrics{display:flex}
+  .tr-pulse.show-desktop-pipeline .ai-newsroom-agents{display:grid}
+  .tr-pulse.show-desktop-cta .ai-newsroom-how{display:flex}
+  .tr-pulse.is-desktop-minimal{
+    gap:4px 12px;
+    padding:6px 10px;
+  }
+  .tr-pulse.is-desktop-minimal .tr-pulse-brand{font-size:20px}
+  .tr-pulse.is-desktop-minimal .tr-pulse-mark{font-size:22px}
+  .tr-pulse.is-desktop-minimal .ai-newsroom-metrics strong{font-size:18px}
+  .tr-pulse.is-desktop-minimal .ai-newsroom-agents span{min-height:28px;font-size:11px}
+  .tr-pulse.is-desktop-minimal .ai-newsroom-how{min-height:30px;padding:5px 10px;font-size:12px}
+  .tr-pulse.is-desktop-full{
+    gap:10px 16px;
+    padding:14px 16px;
+  }
+  .tr-pulse.is-desktop-full .tr-pulse-brand{font-size:24px}
+  .tr-pulse.is-desktop-full .tr-pulse-mark{font-size:26px}
+  .tr-pulse.is-desktop-full .tr-pulse-dek{font-size:13px;line-height:1.35}
+  .tr-pulse.is-desktop-full .ai-newsroom-metrics strong{font-size:22px}
+  .tr-pulse.is-desktop-full .ai-newsroom-agents span{min-height:40px;padding:7px 8px;font-size:13px}
+  .tr-pulse.is-desktop-full .ai-newsroom-how{min-height:40px;padding:8px 14px;font-size:14px}
   .latest-layout .latest-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}
   .latest-layout .latest-item>a{display:block}
   .latest-layout .latest-thumb{margin-bottom:10px;aspect-ratio:16/10}
@@ -1124,6 +1183,23 @@ html:not(.js) .drawer-sub { display: block; }
     pointer-events:none;
   }
   .ai-newsroom-how{min-height:32px;padding:6px 12px;font-size:13px}
+  .tr-pulse.is-desktop-minimal{
+    gap:4px 14px;
+    padding:6px 12px;
+  }
+  .tr-pulse.is-desktop-minimal .tr-pulse-brand{font-size:22px}
+  .tr-pulse.is-desktop-minimal .ai-newsroom-metrics strong{font-size:20px}
+  .tr-pulse.is-desktop-minimal .ai-newsroom-agents{gap:10px}
+  .tr-pulse.is-desktop-minimal .ai-newsroom-agents span{min-height:28px}
+  .tr-pulse.is-desktop-full{
+    gap:12px 20px;
+    padding:16px 18px;
+  }
+  .tr-pulse.is-desktop-full .tr-pulse-brand{font-size:28px}
+  .tr-pulse.is-desktop-full .tr-pulse-mark{font-size:30px}
+  .tr-pulse.is-desktop-full .ai-newsroom-metrics strong{font-size:26px}
+  .tr-pulse.is-desktop-full .ai-newsroom-agents span{min-height:42px;font-size:13px}
+  .tr-pulse.is-desktop-full .ai-newsroom-how{min-height:44px;padding:11px 16px;font-size:14px}
   .find input{width:280px}
   .latest-layout{grid-template-columns:minmax(0,1fr) 280px;gap:24px}
   .ai-wire-card{position:sticky;top:158px}
@@ -1135,6 +1211,10 @@ html:not(.js) .drawer-sub { display: block; }
   .ai-newsroom-banner{padding:8px 16px}
   .tr-pulse-brand{font-size:26px}
   .ai-newsroom-metrics strong{font-size:22px}
+  .tr-pulse.is-desktop-full{padding:18px 20px}
+  .tr-pulse.is-desktop-full .tr-pulse-brand{font-size:30px}
+  .tr-pulse.is-desktop-full .ai-newsroom-metrics strong{font-size:28px}
+  .tr-pulse.is-desktop-minimal{padding:6px 14px}
   .latest-layout{grid-template-columns:minmax(0,1fr) 300px;gap:28px}
   .latest-layout .latest-item h3{font-size:19px}
   .ai-wire-card{padding:24px 22px}
@@ -1143,6 +1223,8 @@ html:not(.js) .drawer-sub { display: block; }
 @media(max-width:699px){
   .site-header .nav{display:none}
   .ai-newsroom-banner{padding:8px 10px}
+  .tr-pulse.is-mobile-minimal{padding:6px 8px}
+  .tr-pulse.is-mobile-full{padding:12px}
   .ai-newsroom-banner + .home-hero .hero-media:after{content:none}
   .ai-newsroom-banner + .home-hero .hero-copy{
     position:static;

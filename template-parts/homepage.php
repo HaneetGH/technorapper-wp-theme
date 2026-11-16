@@ -100,10 +100,13 @@ $hero = $home['hero'];
 $side = $home['side'];
 $latest = $home['latest'];
 $ai_stats = technorapper_ai_wire_home_stats();
+$pulse_classes = function_exists('technorapper_pulse_classes')
+    ? technorapper_pulse_classes()
+    : array('ai-newsroom-banner', 'tr-pulse', 'is-desktop-compact', 'is-mobile-minimal', 'show-desktop-dek', 'show-desktop-metrics', 'show-desktop-pipeline', 'show-desktop-cta', 'hide-mobile-dek', 'show-mobile-metrics', 'hide-mobile-pipeline', 'show-mobile-cta');
 ?>
 
 <div class="home-shell">
-  <section id="tr-pulse" class="ai-newsroom-banner tr-pulse" aria-labelledby="tr-pulse-title">
+  <section id="tr-pulse" class="<?php echo esc_attr(implode(' ', $pulse_classes)); ?>" aria-labelledby="tr-pulse-title">
     <div class="ai-newsroom-copy">
       <div class="tr-pulse-brand"><span class="tr-pulse-mark" aria-hidden="true">ϟ</span><span id="tr-pulse-title">TR <em>PULSE</em></span></div>
       <p class="tr-pulse-dek">Technology, science &amp; comics — discovered, evaluated and verified by AI Wire.</p>

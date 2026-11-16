@@ -64,6 +64,15 @@ add_filter('technorapper_adsense_slot_article', function () {
 
 Do not commit real account IDs to a public fork.
 
+## TR Pulse
+
+The homepage TR Pulse banner has separate desktop and mobile controls under **Appearance → Customize → TR Pulse**.
+
+- **Desktop size** / **Mobile size**: Full, Compact, or Minimal (padding and type only).
+- Per-device checkboxes for description, metrics, pipeline steps, and the How AI Wire Works button.
+
+Defaults keep desktop as a compact strip with every part visible, and mobile as Minimal with the description and pipeline hidden so the lead story sits higher on phones.
+
 ## Desks
 
 Desks are category rails (Apple, AI, Android, Reviews, Comics, and so on on technorapper.com). Comics is a supported default desk, placed after Reviews.
