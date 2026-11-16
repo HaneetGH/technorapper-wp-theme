@@ -110,13 +110,25 @@ $ai_stats = technorapper_ai_wire_home_stats();
     </div>
 
     <div class="ai-newsroom-metrics" aria-label="Last 30 days AI Wire metrics">
-      <div><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['discovered']) : '—'); ?></strong><span>Discovered</span></div>
+      <div class="ai-discovered">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h5M10 13h5M10 17h5"></path></svg>
+        <strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['discovered']) : '—'); ?></strong><span>Discovered</span>
+      </div>
       <i aria-hidden="true"></i>
-      <div><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['evaluated']) : '—'); ?></strong><span>Evaluated</span></div>
+      <div class="ai-evaluated">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
+        <strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['evaluated']) : '—'); ?></strong><span>Evaluated</span>
+      </div>
       <i aria-hidden="true"></i>
-      <div><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['published']) : '—'); ?></strong><span>Published</span></div>
+      <div class="ai-published">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="m7.5 12 3 3 6-6"></path></svg>
+        <strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['published']) : '—'); ?></strong><span>Published</span>
+      </div>
       <i aria-hidden="true"></i>
-      <div class="ai-rejected"><strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['rejected']) : '—'); ?></strong><span>Rejected</span></div>
+      <div class="ai-rejected">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="m9 9 6 6m0-6-6 6"></path></svg>
+        <strong><?php echo esc_html($ai_stats ? number_format_i18n($ai_stats['rejected']) : '—'); ?></strong><span>Rejected</span>
+      </div>
     </div>
 
     <div class="ai-newsroom-agents" aria-label="AI Wire publishing pipeline">
