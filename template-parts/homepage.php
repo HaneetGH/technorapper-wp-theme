@@ -216,8 +216,8 @@ $ai_stats = technorapper_ai_wire_home_stats();
       <aside class="ai-wire-card" aria-label="AI Wire">
         <div class="ai-wire-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M16 3 29 10 16 17 3 10 16 3Z"></path><path d="m3 16 13 7 13-7M3 22l13 7 13-7"></path></svg></div>
         <div>
-          <span class="section-kicker">AI Wire</span>
-          <h3>The AI-powered publishing engine behind TechnoRapper.</h3>
+          <h3 class="ai-wire-title">AI Wire</h3>
+          <p class="ai-wire-intro">The AI-powered publishing engine behind TechnoRapper.</p>
           <ul>
             <li>Multiple trusted sources</li>
             <li>AI research &amp; verification</li>
