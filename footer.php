@@ -16,7 +16,7 @@
       }
       ?>
     </nav>
-    <p class="copy">© <?php echo esc_html(wp_date('Y')); ?> TechnoRapper · Since 2012</p>
+    <p class="copy">© <?php echo esc_html(wp_date('Y')); ?> TechnoRapper · Powered by AI Wire</p>
   </div>
 </footer>
 <?php wp_footer(); ?>

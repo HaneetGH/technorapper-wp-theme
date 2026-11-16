@@ -111,7 +111,7 @@ $how_ai_url = home_url('/ai-wire/');
   <section id="tr-pulse" class="<?php echo esc_attr(implode(' ', $pulse_classes)); ?>" aria-labelledby="tr-pulse-title">
     <div class="ai-newsroom-copy">
       <div class="tr-pulse-brand"><span class="tr-pulse-mark" aria-hidden="true">ϟ</span><span id="tr-pulse-title">TR <em>PULSE</em></span></div>
-      <p class="tr-pulse-dek">Technology, science &amp; comics — discovered, evaluated and verified by AI Wire.</p>
+      <p class="tr-pulse-dek">Agent newsroom: discover → evaluate → verify → write → publish.</p>
     </div>
 
     <div class="ai-newsroom-metrics" aria-label="Last 30 days AI Wire metrics">
@@ -222,7 +222,7 @@ $how_ai_url = home_url('/ai-wire/');
         <div class="ai-wire-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M16 3 29 10 16 17 3 10 16 3Z"></path><path d="m3 16 13 7 13-7M3 22l13 7 13-7"></path></svg></div>
         <div>
           <h3 class="ai-wire-title">AI Wire</h3>
-          <p class="ai-wire-intro">The AI-powered publishing engine behind TechnoRapper.</p>
+          <p class="ai-wire-intro">The agent desk behind TechnoRapper — research, verification, and quality gates before publish.</p>
           <ul>
             <li>Multiple trusted sources</li>
             <li>AI research &amp; verification</li>

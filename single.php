@@ -4,14 +4,33 @@ the_post();
 $cats = get_the_category();
 $desk = $cats ? $cats[0] : null;
 $img  = technorapper_first_image();
+$is_ai_wire = (bool) get_post_meta(get_the_ID(), '_tr_ai_wire_queue_id', true);
+$how_ai_url = home_url('/ai-wire/');
 ?>
-<article class="article">
+<article class="article<?php echo $is_ai_wire ? ' article--ai-wire' : ''; ?>">
   <div>
     <?php if ($desk) : ?>
       <a class="kicker" href="<?php echo esc_url(get_category_link($desk)); ?>"><?php echo esc_html($desk->name); ?></a>
     <?php endif; ?>
     <h1><?php the_title(); ?></h1>
-    <p class="meta"><?php echo esc_html(get_the_date('j M Y')); ?></p>
+    <p class="meta">
+      <?php echo esc_html(get_the_date('j M Y')); ?>
+      <?php if ($is_ai_wire) : ?>
+        <span class="meta-sep" aria-hidden="true">·</span>
+        <span class="meta-ai">AI Wire agents</span>
+      <?php endif; ?>
+    </p>
+    <?php if ($is_ai_wire) : ?>
+      <div class="agent-trail" aria-label="AI Wire pipeline">
+        <span>Discover</span><b aria-hidden="true">→</b>
+        <span>Evaluate</span><b aria-hidden="true">→</b>
+        <span>Verify</span><b aria-hidden="true">→</b>
+        <span>Write</span><b aria-hidden="true">→</b>
+        <span>Review</span><b aria-hidden="true">→</b>
+        <span>Publish</span>
+        <a class="agent-trail-link" href="<?php echo esc_url($how_ai_url); ?>">How it works</a>
+      </div>
+    <?php endif; ?>
     <?php if (has_excerpt()) : ?>
       <p class="standfirst"><?php echo esc_html(wp_strip_all_tags(get_the_excerpt())); ?></p>
     <?php endif; ?>
