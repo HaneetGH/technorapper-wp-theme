@@ -48,7 +48,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.7.0');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.8.0');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
@@ -772,7 +772,7 @@ function technorapper_home_ad_guard()
     <script>
     (function () {
       var slot = document.querySelector('.home-ad');
-      var hero = document.querySelector('.home-hero');
+      var hero = document.querySelector('.tr-lead, .home-hero');
       if (!slot || !hero) return;
       var parking = false;
 
@@ -798,7 +798,7 @@ function technorapper_home_ad_guard()
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i].closest('.google-auto-placed') || nodes[i];
           if (slot.contains(node)) continue;
-          if (node.closest('#tr-pulse, .home-hero')) {
+          if (node.closest('#tr-pulse, .tr-brief-hero, .tr-lead, .home-hero')) {
             park(node);
             continue;
           }
