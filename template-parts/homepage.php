@@ -308,12 +308,18 @@ $published_week = $ai_stats ? (int) $ai_stats['published_week'] : null;
   <section class="tr-brief-hero" aria-labelledby="tr-brief-title">
     <div class="tr-brief-hero__glow" aria-hidden="true"></div>
     <div class="tr-brief-hero__main">
-      <p class="tr-brief-eyebrow"><span class="tr-brief-eyebrow__dash" aria-hidden="true"></span> AI-assisted. Editor-reviewed.</p>
+      <p class="tr-brief-eyebrow"><span class="tr-brief-eyebrow__dash" aria-hidden="true"></span> AI-run. Agent-published.</p>
       <h1 id="tr-brief-title">Technology, with the signal separated from the noise.</h1>
-      <p class="tr-brief-dek">The AI Wire newsroom compares trusted sources, checks claims against the record, and keeps human editorial standards in the loop before a story lands on TechnoRapper.</p>
       <div class="tr-brief-actions">
-        <a class="tr-brief-btn tr-brief-btn--primary" href="#today-brief">Explore today’s brief <span aria-hidden="true">→</span></a>
-        <a class="tr-brief-link" href="<?php echo esc_url($how_ai_url); ?>">How AI Wire works</a>
+        <a class="tr-brief-btn tr-brief-btn--primary" href="#today-brief">
+          <span class="tr-brief-label tr-brief-label--full">Explore today’s brief</span>
+          <span class="tr-brief-label tr-brief-label--short">Today’s brief</span>
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="tr-brief-link" href="<?php echo esc_url($how_ai_url); ?>">
+          <span class="tr-brief-label tr-brief-label--full">How AI Wire works</span>
+          <span class="tr-brief-label tr-brief-label--short">How it works</span>
+        </a>
       </div>
     </div>
 
@@ -409,10 +415,17 @@ $published_week = $ai_stats ? (int) $ai_stats['published_week'] : null;
       <div class="home-ad-banner__visual" aria-hidden="true"></div>
       <div class="home-ad-banner__copy">
         <p class="home-ad-banner__eyebrow">Sponsored</p>
-        <h2>Discover more / Compare phones.</h2>
+        <h2>
+          <span class="tr-brief-label tr-brief-label--full">Discover more / Compare phones.</span>
+          <span class="tr-brief-label tr-brief-label--short">Compare phones</span>
+        </h2>
       </div>
       <div class="home-ad-banner__actions">
-        <a class="tr-brief-btn tr-brief-btn--primary" href="<?php echo esc_url(home_url('/category/guides/')); ?>">Compare phones <span aria-hidden="true">→</span></a>
+        <a class="tr-brief-btn tr-brief-btn--primary" href="<?php echo esc_url(home_url('/category/guides/')); ?>">
+          <span class="tr-brief-label tr-brief-label--full">Compare phones</span>
+          <span class="tr-brief-label tr-brief-label--short">Guides</span>
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
     <div class="home-ad"><?php technorapper_ad_header(); ?></div>
@@ -437,7 +450,7 @@ $published_week = $ai_stats ? (int) $ai_stats['published_week'] : null;
     <div>
       <span class="section-kicker">Stay in the loop</span>
       <h2>Technology worth knowing about.</h2>
-      <p>Follow TechnoRapper for concise technology news with transparent AI assistance and editor review.</p>
+      <p>Follow TechnoRapper for concise technology news. AI Wire agents decide what to publish.</p>
     </div>
     <a href="<?php echo esc_url(home_url('/contact-us-page/')); ?>">Get in touch <span aria-hidden="true">→</span></a>
   </section>
