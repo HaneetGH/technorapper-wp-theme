@@ -1395,6 +1395,7 @@ html:not(.js) .drawer-sub { display: block; }
  * the pulse footprint and restores the original 1.3.13 hero proportions/type.
  */
 @media (max-width: 760px){
+  .ai-newsroom-agents span:after{display:none}
   .ai-newsroom-banner{
     padding:10px 11px;
     gap:7px;
