@@ -68,67 +68,161 @@ function technorapper_ai_wire_home_stats()
 }
 
 /**
- * Compact evidence pill labels for the lead story.
- * Prefer short telegraph-style phrases over multi-line cards.
+ * Shorten a phrase for the homepage evidence pill.
+ */
+function technorapper_evidence_clip($text, $max = 34)
+{
+    $text = trim(preg_replace('/\s+/', ' ', wp_strip_all_tags((string) $text)));
+    $text = preg_replace('/^(?:still\s+)?(?:open|unclear|unknown)[:\s-]+/i', '', $text);
+    if ($text === '') {
+        return '';
+    }
+    if (function_exists('mb_strimwidth')) {
+        return mb_strimwidth($text, 0, $max, '…', 'UTF-8');
+    }
+    if (strlen($text) > $max) {
+        return rtrim(substr($text, 0, max(1, $max - 1))) . '…';
+    }
+    return $text;
+}
+
+/**
+ * Reader-facing open question from AI Wire takeaways / review — never SEO gate nits.
+ */
+function technorapper_evidence_open_item($takeaways, $review, $source_count)
+{
+    $candidates = array();
+    if (is_array($takeaways)) {
+        // Prefer the last takeaway (usually "what to watch") then earlier ones.
+        foreach (array_reverse($takeaways) as $item) {
+            $line = trim(wp_strip_all_tags((string) $item));
+            if ($line === '') {
+                continue;
+            }
+            if (preg_match('/\b(watch|unclear|unknown|pending|still|remain|depend|expect|whether|until|timeline|rollout|availability|pricing|export|confirm|corroborat|independen)/i', $line)) {
+                $candidates[] = $line;
+            }
+        }
+        if (!$candidates && $takeaways) {
+            $last = trim(wp_strip_all_tags((string) end($takeaways)));
+            if ($last !== '') {
+                $candidates[] = $last;
+            }
+        }
+    }
+
+    if (is_array($review)) {
+        foreach ((array) ($review['coverage'] ?? array()) as $source) {
+            if (!is_array($source)) {
+                continue;
+            }
+            $rel = strtolower(trim((string) ($source['relationship'] ?? '')));
+            if ($rel !== '' && preg_match('/\b(unconfirm|partial|single|press.?release|unverified|disput)/i', $rel)) {
+                $candidates[] = $rel;
+            }
+        }
+    }
+
+    foreach ($candidates as $line) {
+        $clipped = technorapper_evidence_clip($line, 34);
+        if ($clipped !== '') {
+            return $clipped;
+        }
+    }
+
+    if ((int) $source_count <= 1) {
+        return 'independent corroboration';
+    }
+    return 'follow-on details';
+}
+
+/**
+ * Compact evidence pill from AI Wire review coverage + takeaways.
+ * Confirmed = sources actually compared; Open = still-developing angle.
  */
 function technorapper_lead_evidence($post)
 {
     $source_count = 0;
-    $unclear = '';
+    $open = '';
+    $takeaways = array();
+    $review = array();
 
     if ($post && !empty($post->ID)) {
-        $sources = get_post_meta((int) $post->ID, '_tr_ai_wire_sources', true);
-        if (is_array($sources)) {
-            $source_count = count($sources);
-        } elseif (is_string($sources) && $sources !== '') {
-            $decoded = json_decode($sources, true);
-            if (is_array($decoded)) {
-                $source_count = count($decoded);
+        $publishers = array();
+
+        $primary = esc_url_raw((string) get_post_meta((int) $post->ID, '_tr_ai_wire_source_url', true));
+        if ($primary !== '') {
+            $host = wp_parse_url($primary, PHP_URL_HOST);
+            if (is_string($host) && $host !== '') {
+                $publishers[strtolower(preg_replace('/^www\./i', '', $host))] = true;
+            } else {
+                $publishers['primary'] = true;
             }
         }
 
-        $takeaways = json_decode((string) get_post_meta((int) $post->ID, '_tr_ai_wire_takeaways', true), true);
-        if (!$source_count && is_array($takeaways)) {
-            $source_count = min(3, count($takeaways));
+        $raw_review = get_post_meta((int) $post->ID, '_tr_ai_wire_review', true);
+        if (is_string($raw_review) && $raw_review !== '') {
+            $decoded = json_decode($raw_review, true);
+            if (is_array($decoded)) {
+                $review = $decoded;
+            }
+        } elseif (is_array($raw_review)) {
+            $review = $raw_review;
+        }
+
+        foreach ((array) ($review['coverage'] ?? array()) as $source) {
+            if (!is_array($source)) {
+                continue;
+            }
+            $publisher = trim((string) ($source['publisher'] ?? ''));
+            $url = esc_url_raw((string) ($source['url'] ?? ''));
+            $key = $publisher !== '' ? strtolower($publisher) : '';
+            if ($key === '' && $url !== '') {
+                $host = wp_parse_url($url, PHP_URL_HOST);
+                $key = is_string($host) ? strtolower(preg_replace('/^www\./i', '', $host)) : '';
+            }
+            if ($key !== '') {
+                $publishers[$key] = true;
+            }
         }
 
         $gate = get_post_meta((int) $post->ID, '_tr_ai_wire_prepublish_gate', true);
-        if (is_array($gate)) {
-            foreach (array('warnings', 'blocking_issues', 'soft_issues') as $key) {
-                if (empty($gate[$key]) || !is_array($gate[$key])) {
+        if (is_array($gate) && !empty($gate['sources_verified']) && is_array($gate['sources_verified'])) {
+            foreach ($gate['sources_verified'] as $src) {
+                $line = trim(wp_strip_all_tags((string) $src));
+                if ($line === '') {
                     continue;
                 }
-                foreach ($gate[$key] as $issue) {
-                    $line = trim(wp_strip_all_tags((string) $issue));
-                    if ($line !== '') {
-                        $unclear = $line;
-                        break 2;
-                    }
-                }
+                $host = wp_parse_url($line, PHP_URL_HOST);
+                $key = is_string($host) && $host !== ''
+                    ? strtolower(preg_replace('/^www\./i', '', $host))
+                    : strtolower($line);
+                $publishers[$key] = true;
             }
         }
 
-        if ($unclear === '' && get_post_meta((int) $post->ID, '_tr_ai_wire_queue_id', true)) {
-            $unclear = 'follow-on claims';
+        $source_count = count($publishers);
+
+        $raw_takeaways = json_decode((string) get_post_meta((int) $post->ID, '_tr_ai_wire_takeaways', true), true);
+        if (is_array($raw_takeaways)) {
+            $takeaways = $raw_takeaways;
         }
+
+        $open = technorapper_evidence_open_item($takeaways, $review, $source_count);
     }
 
     if ($source_count < 1) {
         $source_count = 1;
     }
-    if ($unclear === '') {
-        $unclear = 'secondary implications';
-    }
-
-    // Keep the unclear clause short enough for a single pill.
-    $unclear = preg_replace('/\s+/', ' ', $unclear);
-    if (strlen($unclear) > 42) {
-        $unclear = rtrim(substr($unclear, 0, 39)) . '…';
+    if ($open === '') {
+        $open = $source_count <= 1 ? 'independent corroboration' : 'follow-on details';
     }
 
     return array(
-        'confirmed' => sprintf(_n('%d source', '%d sources', $source_count, 'technorapper'), $source_count),
-        'unclear'   => $unclear,
+        'checked_label' => __('Checked', 'technorapper'),
+        'open_label'    => __('Open', 'technorapper'),
+        'confirmed'     => sprintf(_n('%d source', '%d sources', $source_count, 'technorapper'), $source_count),
+        'unclear'       => $open,
     );
 }
 
@@ -277,11 +371,11 @@ if ($ai_stats) {
         </div>
         <h2 class="tr-lead-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
         <p class="tr-lead-summary"><?php echo esc_html(technorapper_card_text($hero, 36)); ?></p>
-        <p class="tr-evidence-pill" aria-label="Evidence">
+        <p class="tr-evidence-pill" aria-label="AI Wire evidence">
           <span class="tr-evidence-pill__icon" aria-hidden="true">i</span>
-          <span><strong>Confirmed:</strong> <?php echo esc_html($evidence['confirmed']); ?></span>
-          <span class="tr-evidence-pill__sep" aria-hidden="true">•</span>
-          <span><strong>Unclear:</strong> <?php echo esc_html($evidence['unclear']); ?></span>
+          <span class="tr-evidence-pill__part"><span class="tr-evidence-pill__k"><?php echo esc_html($evidence['checked_label']); ?></span> <?php echo esc_html($evidence['confirmed']); ?></span>
+          <span class="tr-evidence-pill__sep" aria-hidden="true">·</span>
+          <span class="tr-evidence-pill__part"><span class="tr-evidence-pill__k"><?php echo esc_html($evidence['open_label']); ?></span> <?php echo esc_html($evidence['unclear']); ?></span>
         </p>
       </div>
     </article>
