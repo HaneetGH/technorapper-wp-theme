@@ -1425,11 +1425,11 @@ html:not(.js) .drawer-sub { display: block; }
   .ai-newsroom-banner{padding:9px 10px;gap:6px}
   .tr-pulse-brand{font-size:20px}
   .tr-pulse-mark{font-size:22px}
-  .tr-pulse-dek{font-size:9px}
+  .tr-pulse-dek{font-size:10px}
   .ai-newsroom-metrics strong{font-size:18px}
-  .ai-newsroom-metrics span{font-size:6px}
+  .ai-newsroom-metrics span{font-size:7.5px;letter-spacing:.04em}
   .ai-newsroom-agents{gap:5px}
-  .ai-newsroom-agents span{min-height:34px;padding:5px 3px;font-size:7.5px}
+  .ai-newsroom-agents span{min-height:42px;padding:6px 4px;font-size:9px}
   .ai-newsroom-agents b{width:18px;height:18px;flex-basis:18px}
   .ai-newsroom-banner + .home-hero .hero-copy h1{font-size:31px}
 }
