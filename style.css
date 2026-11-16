@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: AI-enabled technology news theme with a thin masthead brief, evidence pill, desk cards, and a light sponsored rail.
-Version: 1.8.3
+Version: 1.8.4
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -1334,7 +1334,7 @@ html:not(.js) .drawer-sub { display: block; }
   .ai-newsroom-agents{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
 }
 
-/* 1.8.3 thin masthead brief — editorial wire, not generic AI chrome */
+/* 1.8.4 thin masthead brief — editorial wire, not generic AI chrome */
 .home-shell--brief{
   max-width:1120px;
   margin:0 auto;
