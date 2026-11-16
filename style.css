@@ -1379,11 +1379,12 @@ html:not(.js) .drawer-sub { display: block; }
   margin:0 0 8px;
   color:var(--accent-bright);
   font-family:inherit;
-  font-size:.8125rem;
-  font-weight:700;
-  letter-spacing:.04em;
+  font-size:.875rem;
+  font-weight:800;
+  letter-spacing:.03em;
   line-height:1.2;
   text-transform:uppercase;
+  -webkit-font-smoothing:antialiased;
 }
 .tr-brief-eyebrow__dash{
   display:inline-block;
@@ -1628,19 +1629,20 @@ html:not(.js) .drawer-sub { display: block; }
   background:color-mix(in oklab, #0C121C 92%, #000);
   color:var(--ink);
   font-family:inherit;
-  font-size:.8125rem;
-  font-weight:600;
+  font-size:.875rem;
+  font-weight:650;
   line-height:1.25;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  -webkit-font-smoothing:antialiased;
 }
 .tr-evidence-pill__part{
   display:inline-flex;
   align-items:baseline;
   gap:5px;
   min-inline-size:0;
-  color:color-mix(in oklab, var(--ink) 88%, transparent);
+  color:color-mix(in oklab, var(--ink) 92%, transparent);
 }
 .tr-evidence-pill__part:last-child{
   overflow:hidden;
@@ -1648,7 +1650,7 @@ html:not(.js) .drawer-sub { display: block; }
 }
 .tr-evidence-pill__k{
   color:var(--ink);
-  font-weight:700;
+  font-weight:800;
 }
 .tr-evidence-pill__k::after{content:":"}
 .tr-evidence-pill__icon{
