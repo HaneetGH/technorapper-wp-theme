@@ -1,5 +1,13 @@
 <?php
-$suite = __DIR__ . '/test-ai-disclosure.php';
+$suites = array(
+    __DIR__ . '/test-ai-disclosure.php',
+    __DIR__ . '/test-indexing.php',
+);
 $status = 0;
-passthru('php ' . escapeshellarg($suite), $status);
+foreach ($suites as $suite) {
+    passthru('php ' . escapeshellarg($suite), $suite_status);
+    if ($suite_status !== 0) {
+        $status = $suite_status;
+    }
+}
 exit($status);

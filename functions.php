@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/inc/ai-disclosure.php';
+require_once __DIR__ . '/inc/indexing.php';
 
 function technorapper_setup()
 {
@@ -50,7 +51,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.8.6');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.8.7');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',
@@ -578,10 +579,11 @@ function technorapper_social_tags($tags)
 }
 add_filter('aioseo_facebook_tags', 'technorapper_social_tags');
 add_filter('aioseo_twitter_tags', 'technorapper_social_tags');
+add_filter('wp_robots', 'technorapper_404_robots');
 
 function technorapper_og_fallback()
 {
-    if (defined('AIOSEO_VERSION')) {
+    if (defined('AIOSEO_VERSION') || !technorapper_should_emit_og_fallback()) {
         return;
     }
     $img = technorapper_social_image();
