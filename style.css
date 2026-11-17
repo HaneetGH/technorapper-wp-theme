@@ -4,7 +4,7 @@ Theme URI: https://github.com/HaneetGH/technorapper-wp-theme
 Author: TechnoRapper
 Author URI: https://technorapper.com
 Description: AI-enabled technology news theme with a thin masthead brief, evidence pill, desk cards, and a light sponsored rail.
-Version: 1.8.5
+Version: 1.8.6
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -376,35 +376,88 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-    .agent-trail {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px 8px;
+    .ai-disclosure {
       margin: 10px 0 14px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       border: 1px solid rgba(165,243,252,.16);
       border-radius: 12px;
       background: rgba(15, 23, 42, 0.72);
-      color: #CBD5E1;
-      font-size: 12px;
-      font-weight: 700;
+      color: #D7DEEA;
     }
-    .agent-trail span {
+    .ai-disclosure-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin: 0 0 8px;
+    }
+    .ai-disclosure-brand { margin: 0; }
+    .ai-disclosure-kicker {
+      color: var(--accent-bright);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .ai-disclosure-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .ai-disclosure-role {
+      display: inline-block;
       padding: 4px 8px;
       border-radius: 8px;
       background: rgba(76, 201, 240, 0.08);
       border: 1px solid rgba(165,243,252,.12);
+      color: #E8EEF7;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+      text-transform: uppercase;
     }
-    .agent-trail b { color: var(--accent); opacity: .8; font-weight: 800; }
-    .agent-trail-link {
-      margin-left: auto;
+    .ai-disclosure-copy {
+      margin: 0;
+      color: #CBD5E1;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .ai-disclosure-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 16px;
+      margin: 10px 0 0;
+    }
+    .ai-disclosure-source,
+    .ai-disclosure-more {
       color: var(--accent-bright);
+      font-size: 12px;
       font-weight: 800;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
     }
-    .agent-trail-link:hover { color: #fff; }
+    .ai-disclosure-source:hover,
+    .ai-disclosure-more:hover { color: #fff; }
+    .ai-disclosure-source-name {
+      display: inline-block;
+      margin-left: 6px;
+      color: #CBD5E1;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .ai-disclosure a:focus-visible {
+      outline: 3px solid var(--accent-bright);
+      outline-offset: 3px;
+    }
     .article--ai-wire .kicker { color: var(--accent-bright); }
     .dek, .standfirst { color: #CBD5E1; }
     .body p, .page-body p { color: #D7DEEA; }
@@ -472,6 +525,7 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       .article, .result { grid-template-columns: 1fr; }
       .result .photo { width: 100%; height: 180px; }
       .article h1, .page-h h1 { font-size: 28px; }
+      .ai-disclosure-actions { gap: 8px 14px; }
     }
     @media (max-width: 640px) {
       .wrap { padding: 0 12px; }
@@ -488,6 +542,10 @@ Tags: news, blog, magazine, custom-menu, featured-images, threaded-comments, tra
       .jump { flex-wrap: wrap; }
       .article h1 { font-size: 24px; }
       .site-footer .wrap { padding: 18px 12px 24px; }
+      .ai-disclosure { padding: 12px; }
+      .ai-disclosure-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .ai-disclosure-copy { font-size: 13px; }
+      .ai-disclosure-actions { flex-direction: column; align-items: flex-start; gap: 8px; }
     }
 
 /* WordPress chrome */

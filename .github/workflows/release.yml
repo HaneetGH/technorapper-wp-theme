@@ -49,6 +49,7 @@ jobs:
             php -l "$file" || failed=1
           done < <(find . -type f -name '*.php' -not -path './.git/*' -print0)
           [[ "$failed" -eq 0 ]] || exit 1
+          php tests/run.php
 
       - name: Validate required theme files
         shell: bash
