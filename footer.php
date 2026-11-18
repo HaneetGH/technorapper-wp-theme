@@ -3,7 +3,6 @@
   <div class="wrap">
     <nav aria-label="Footer">
       <a href="<?php echo esc_url(home_url('/')); ?>">Home</a>
-      <a href="<?php echo esc_url(home_url('/feed/')); ?>">RSS</a>
       <?php
       foreach (technorapper_desks() as $desk) {
           $term = technorapper_desk_term($desk[0]);
