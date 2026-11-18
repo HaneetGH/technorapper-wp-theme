@@ -9,7 +9,6 @@ function technorapper_setup()
 {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
-    add_theme_support('automatic-feed-links');
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script', 'navigation-widgets'));
     add_theme_support('responsive-embeds');
     set_post_thumbnail_size(1160, 680, true);
@@ -594,6 +593,10 @@ function technorapper_og_fallback()
     echo '<meta name="twitter:image" content="' . esc_url($img) . '" />' . "\n";
 }
 add_action('wp_head', 'technorapper_og_fallback', 40);
+
+// Public RSS discovery is intentionally disabled; AI Wire consumes curated feeds internally.
+remove_action('wp_head', 'feed_links', 2);
+remove_action('wp_head', 'feed_links_extra', 3);
 
 function technorapper_focus_keyphrase_text($title, $slug = '')
 {
@@ -1198,7 +1201,6 @@ function technorapper_drawer()
         ));
         ?>
       </nav>
-      <a class="drawer-rss" href="<?php echo esc_url(home_url('/feed/')); ?>">RSS</a>
       <?php $pages = technorapper_site_pages(); ?>
       <?php if ($pages) : ?>
       <nav class="drawer-meta" aria-label="About the site">

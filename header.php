@@ -25,7 +25,6 @@
   <div class="utils">
     <div class="wrap">
       <span><?php echo esc_html(wp_date('l, j F Y')); ?></span>
-      <a href="<?php echo esc_url(home_url('/feed/')); ?>">RSS</a>
     </div>
   </div>
   <div class="wrap mast">
