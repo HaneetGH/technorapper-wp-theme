@@ -102,6 +102,26 @@ function technorapper_agent_rate_limit()
     return true;
 }
 
+function technorapper_agent_error_response_data($data, $status)
+{
+    if (!is_array($data) || (int) $status < 400) {
+        return $data;
+    }
+
+    if (!isset($data['data']) || !is_array($data['data'])) {
+        $data['data'] = array();
+    }
+    if (!isset($data['data']['status'])) {
+        $data['data']['status'] = (int) $status;
+    }
+    $data['data']['resolution'] = array(
+        'documentation' => home_url('/agents/'),
+        'openapi'       => home_url('/openapi.json'),
+    );
+
+    return $data;
+}
+
 function technorapper_agent_headers($response, $server, $request)
 {
     if ($response instanceof WP_REST_Response && strpos($request->get_route(), '/tr/v1/') === 0) {
@@ -109,6 +129,15 @@ function technorapper_agent_headers($response, $server, $request)
         $response->header('X-Robots-Tag', 'noindex, nofollow');
         $response->header('X-Content-Type-Options', 'nosniff');
         $response->header('Vary', 'Accept-Encoding');
+
+        $status = (int) $response->get_status();
+        if ($status >= 400) {
+            $data = technorapper_agent_error_response_data($response->get_data(), $status);
+            $response->set_data($data);
+            if ($status === 429 && !empty($data['data']['retry_after'])) {
+                $response->header('Retry-After', (string) max(1, (int) $data['data']['retry_after']));
+            }
+        }
     }
     return $response;
 }
@@ -194,10 +223,15 @@ function technorapper_agent_page_url($request, $page)
     return add_query_arg($query_args, rest_url(ltrim($request->get_route(), '/')));
 }
 
+function technorapper_agent_bounded_posts($posts, $per_page)
+{
+    return array_slice((array) $posts, 0, max(0, (int) $per_page));
+}
+
 function technorapper_agent_collection_response($posts, $page, $per_page, $total, $request = null)
 {
     $items = array();
-    foreach ($posts as $post) {
+    foreach (technorapper_agent_bounded_posts($posts, $per_page) as $post) {
         $item = technorapper_agent_post($post);
         unset($item['content_html'], $item['content_text']);
         $items[] = $item;

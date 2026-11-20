@@ -6,44 +6,40 @@ TechnoRapper is an AI-assisted technology news publication powered by AI Wire.
 
 - Website: https://technorapper.com/
 - Agent documentation: https://technorapper.com/agents/
-- Agent API: https://technorapper.com/wp-json/tr/v1/
+- OpenAPI specification: https://technorapper.com/openapi.json
+- Agent discovery: https://technorapper.com/.well-known/agent.json
+- Agent API base: https://technorapper.com/wp-json/tr/v1/
 - Articles: https://technorapper.com/wp-json/tr/v1/articles
+- Article details: https://technorapper.com/wp-json/tr/v1/articles/{id}
 - Search: https://technorapper.com/wp-json/tr/v1/search
 - Categories: https://technorapper.com/wp-json/tr/v1/categories
-- RSS: https://technorapper.com/feed/
-- Agent discovery: https://technorapper.com/.well-known/agent.json
+- Status: https://technorapper.com/wp-json/tr/v1/status
 
-## Agent usage
+## When to use TechnoRapper
 
-TechnoRapper provides a stable, public, read-only machine interface for discovery, retrieval and search. Agents should use the API as the primary content interface and use canonical article URLs when citing or linking.
+- Search recent technology coverage by topic.
+- Discover published stories and categories.
+- Retrieve an article with its canonical URL, summary, and provenance.
+- Check API availability before a larger read.
 
-The public Agent API is read-only. Prefer the API over HTML scraping.
+## API policy
 
-- Default page size: 20
-- Maximum page size: 50
-- Respect HTTP 429 responses.
-- Respect Cache-Control, ETag and Last-Modified headers.
-- Follow `pagination.next_url` / `pagination.prev_url` instead of constructing pagination URLs when possible.
-- Treat `429` as a rate-limit response and retry after a delay.
-- Preserve canonical URLs.
-- Preserve source attribution and AI disclosure.
+- Public API access requires no authentication for low-volume reads.
+- The API is read-only and returns published articles only.
+- Collection endpoints default to 20 items and accept at most 50 items.
+- Use GET requests only. No content creation or modification is available.
+- Respect HTTP 429, Retry-After, Cache-Control, ETag, and Last-Modified.
+- Follow `pagination.next_url` and `pagination.prev_url`.
+- Preserve canonical URLs, source attribution, and AI disclosure.
+- Errors use the WordPress REST JSON shape: `code`, `message`, and `data.status`; `data.resolution` links to documentation.
 - Do not republish full article text as a substitute for licensed access.
 
 ## Content model
 
-### Collection item
+Collection items include stable IDs, WordPress IDs, title, canonical URL, timestamps, excerpt, categories, author, provenance, and links. Article detail also includes `content_html` and `content_text`.
 
-Each article item includes `id`, `wordpress_id`, `title`, `url`, `canonical_url`, `published_at`, `updated_at`, `excerpt`, `categories`, `image`, `author`, `provenance` and `links`.
-
-### Article detail
-
-The detail endpoint additionally returns `content_html` and `content_text`.
-
-
-Articles expose stable TechnoRapper IDs, canonical URLs, publication/update timestamps, summaries, categories, authors and provenance metadata.
-
-TechnoRapper may use AI-assisted processing and curation through AI Wire. Source attribution remains part of the article provenance.
+TechnoRapper may use AI-assisted processing and curation through AI Wire. Source attribution and AI disclosure remain part of article provenance.
 
 ## Contact
 
-For licensing, corrections, partnerships or high-volume API access, use the published Contact page on the website.
+For licensing, corrections, or high-volume API access, use the published Contact page.
