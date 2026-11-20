@@ -14,7 +14,8 @@ function technorapper_agent_discovery()
     $path = untrailingslashit((string) $path);
 
     if ($path === '/llms.txt') {
-        nocache_headers();
+        header('Cache-Control: public, max-age=3600');
+        header('X-Content-Type-Options: nosniff');
         header('Content-Type: text/plain; charset=utf-8');
         echo "TechnoRapper\n\n";
         echo "TechnoRapper is an AI-assisted technology news publication powered by AI Wire.\n";
@@ -40,7 +41,8 @@ function technorapper_agent_discovery()
     }
 
     if ($path === '/.well-known/agent.json') {
-        nocache_headers();
+        header('Cache-Control: public, max-age=3600');
+        header('X-Content-Type-Options: nosniff');
         header('Content-Type: application/json; charset=utf-8');
         echo wp_json_encode(array(
             'name' => 'TechnoRapper',
@@ -59,12 +61,13 @@ function technorapper_agent_discovery()
     }
 
     if ($path === '/agents/') {
-        nocache_headers();
+        header('Cache-Control: public, max-age=3600');
+        header('X-Content-Type-Options: nosniff');
         header('Content-Type: text/html; charset=utf-8');
         echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="index,follow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TechnoRapper for AI Agents</title></head><body>';
         echo '<main><h1>TechnoRapper for AI Agents</h1>';
         echo '<p>Machine-readable access to TechnoRapper content, with read-only APIs, source attribution and AI Wire provenance.</p>';
-        echo '<h2>API</h2><ul>';
+        echo '<h2>API</h2><p>Use <code>GET</code> only. Collection endpoints return 20 items by default and 50 maximum. Use <code>page</code> and <code>per_page</code> for pagination.</p><ul>';
         echo '<li><a href="' . esc_url(rest_url('tr/v1/articles')) . '">Articles</a></li>';
         echo '<li><a href="' . esc_url(rest_url('tr/v1/search')) . '">Search</a></li>';
         echo '<li><a href="' . esc_url(rest_url('tr/v1/categories')) . '">Categories</a></li>';
@@ -72,7 +75,7 @@ function technorapper_agent_discovery()
         echo '</ul><h2>Discovery</h2><ul>';
         echo '<li><a href="' . esc_url(home_url('/llms.txt')) . '">llms.txt</a></li>';
         echo '<li><a href="' . esc_url(home_url('/.well-known/agent.json')) . '">agent.json</a></li>';
-        echo '</ul><h2>Usage</h2><p>The API is read-only. Maximum page size is 50. Clients should respect rate limits, caching headers, canonical URLs and source attribution.</p></main></body></html>';
+        echo '</ul><h2>Usage</h2><ul><li>Published articles only.</li><li>Stable IDs use the <code>tr-&lt;wordpress_id&gt;</code> format.</li><li>Collection responses include <code>pagination.next_url</code> and <code>pagination.prev_url</code>.</li><li>Article responses expose HTML and plain-text content plus provenance metadata.</li><li>Clients should respect 429 responses, Cache-Control, ETag and canonical/source attribution.</li></ul><p>The API is read-only and never provides WordPress write capabilities.</p></main></body></html>'
         exit;
     }
 }
