@@ -15,17 +15,30 @@ TechnoRapper is an AI-assisted technology news publication powered by AI Wire.
 
 ## Agent usage
 
+TechnoRapper provides a stable, public, read-only machine interface for discovery, retrieval and search. Agents should use the API as the primary content interface and use canonical article URLs when citing or linking.
+
 The public Agent API is read-only. Prefer the API over HTML scraping.
 
 - Default page size: 20
 - Maximum page size: 50
 - Respect HTTP 429 responses.
-- Respect Cache-Control and ETag headers.
+- Respect Cache-Control, ETag and Last-Modified headers.
+- Follow `pagination.next_url` / `pagination.prev_url` instead of constructing pagination URLs when possible.
+- Treat `429` as a rate-limit response and retry after a delay.
 - Preserve canonical URLs.
 - Preserve source attribution and AI disclosure.
 - Do not republish full article text as a substitute for licensed access.
 
 ## Content model
+
+### Collection item
+
+Each article item includes `id`, `wordpress_id`, `title`, `url`, `canonical_url`, `published_at`, `updated_at`, `excerpt`, `categories`, `image`, `author`, `provenance` and `links`.
+
+### Article detail
+
+The detail endpoint additionally returns `content_html` and `content_text`.
+
 
 Articles expose stable TechnoRapper IDs, canonical URLs, publication/update timestamps, summaries, categories, authors and provenance metadata.
 
