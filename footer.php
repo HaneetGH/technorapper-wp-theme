@@ -3,6 +3,8 @@
   <div class="wrap">
     <nav aria-label="Footer">
       <a href="<?php echo esc_url(home_url('/')); ?>">Home</a>
+      <a href="<?php echo esc_url(home_url('/agents/')); ?>">Agent documentation</a>
+      <a href="<?php echo esc_url(home_url('/openapi.json')); ?>">OpenAPI specification</a>
       <?php
       foreach (technorapper_desks() as $desk) {
           $term = technorapper_desk_term($desk[0]);

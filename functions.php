@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
 require_once __DIR__ . '/inc/ai-disclosure.php';
 require_once __DIR__ . '/inc/indexing.php';
 require_once __DIR__ . '/inc/agent-api.php';
+require_once __DIR__ . '/inc/agent-readiness.php';
 require_once __DIR__ . '/inc/agent-discovery.php';
 require_once __DIR__ . '/inc/agent-schema.php';
 
@@ -53,7 +54,7 @@ add_action('widgets_init', 'technorapper_widgets');
 
 function technorapper_assets()
 {
-    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.8.7');
+    wp_enqueue_style('technorapper', get_stylesheet_uri(), array(), '1.10.0');
     wp_enqueue_script(
         'technorapper-drawer',
         get_template_directory_uri() . '/assets/js/drawer.js',

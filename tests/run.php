@@ -2,6 +2,7 @@
 $suites = array(
     __DIR__ . '/test-ai-disclosure.php',
     __DIR__ . '/test-indexing.php',
+    __DIR__ . '/test-agent-readiness.php',
 );
 $status = 0;
 foreach ($suites as $suite) {
