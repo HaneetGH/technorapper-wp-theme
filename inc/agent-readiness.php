@@ -338,48 +338,7 @@ function technorapper_agent_send_representation($body, $status, $content_type, $
     exit;
 }
 
-function technorapper_agent_readiness_response()
-{
-    $uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '/';
-    $path = wp_parse_url($uri, PHP_URL_PATH);
-    $path = untrailingslashit((string) $path);
 
-    if ($path === '/openapi.json') {
-        $document = technorapper_agent_openapi_document();
-        if (is_array($document)) {
-            technorapper_agent_send_representation(
-                wp_json_encode($document, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-                200,
-                'application/json',
-                'public, max-age=3600'
-            );
-        }
-    }
-
-    $accept = isset($_SERVER['HTTP_ACCEPT']) ? wp_unslash($_SERVER['HTTP_ACCEPT']) : '';
-    if (!technorapper_agent_accepts_markdown($accept)) {
-        return;
-    }
-
-    if (is_404()) {
-        technorapper_agent_send_representation(
-            technorapper_agent_404_markdown_body(),
-            404,
-            'text/markdown',
-            'no-store'
-        );
-    }
-
-    if (technorapper_agent_is_home_request($uri) || is_front_page()) {
-        technorapper_agent_send_representation(
-            technorapper_agent_home_markdown(),
-            200,
-            'text/markdown',
-            'public, max-age=300'
-        );
-    }
-}
-add_action('template_redirect', 'technorapper_agent_readiness_response', -1);
 
 function technorapper_agent_home_metadata()
 {
