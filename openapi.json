@@ -4,7 +4,7 @@
     "title": "TechnoRapper Agent API",
     "version": "1.0.0",
     "summary": "Public, read-only API for TechnoRapper articles and discovery.",
-    "description": "Use these GET operations to search TechnoRapper technology coverage, list published article summaries, retrieve article details, browse categories, and check status. No authentication is required for low-volume public reads. The API cannot create or modify content. Preserve canonical URLs, source attribution, and AI disclosure. Respect HTTP 429 and Retry-After."
+    "description": "Use these GET operations to search TechnoRapper technology coverage, list published article summaries, retrieve article details, browse categories, and check status. No authentication is required for low-volume public reads. The API cannot create or modify content. Preserve canonical URLs, source attribution, and AI disclosure. Respect HTTP 429 and Retry-After. The API uses URL versioning; see the published deprecation and sunset policy."
   },
   "servers": [
     {
@@ -89,6 +89,45 @@
                   "$ref": "#/components/schemas/ArticleCollection"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "400": {
@@ -99,6 +138,45 @@
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "429": {
@@ -107,6 +185,52 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              },
+              "Retry-After": {
+                "description": "Seconds to wait before retrying a rate-limited request.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
                 }
               }
             }
@@ -143,6 +267,45 @@
                   "$ref": "#/components/schemas/ArticleResponse"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "404": {
@@ -153,6 +316,45 @@
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "429": {
@@ -161,6 +363,52 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              },
+              "Retry-After": {
+                "description": "Seconds to wait before retrying a rate-limited request.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
                 }
               }
             }
@@ -218,6 +466,45 @@
                   "$ref": "#/components/schemas/ArticleCollection"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "400": {
@@ -228,6 +515,45 @@
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "429": {
@@ -236,6 +562,52 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              },
+              "Retry-After": {
+                "description": "Seconds to wait before retrying a rate-limited request.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
                 }
               }
             }
@@ -260,6 +632,45 @@
                   "$ref": "#/components/schemas/CategoryCollection"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "429": {
@@ -268,6 +679,52 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              },
+              "Retry-After": {
+                "description": "Seconds to wait before retrying a rate-limited request.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
                 }
               }
             }
@@ -292,6 +749,45 @@
                   "$ref": "#/components/schemas/StatusResponse"
                 }
               }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              }
             }
           },
           "429": {
@@ -300,6 +796,52 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {
+              "RateLimit-Policy": {
+                "description": "Current rate-limit policy (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";q=60;w=60"
+                }
+              },
+              "RateLimit": {
+                "description": "Current remaining quota and reset delay (IETF HTTPAPI draft).",
+                "schema": {
+                  "type": "string",
+                  "example": "\"default\";r=59;t=30"
+                }
+              },
+              "RateLimit-Limit": {
+                "description": "Compatibility rate-limit quota for clients using the earlier field names.",
+                "schema": {
+                  "type": "string",
+                  "example": "60;w=60"
+                }
+              },
+              "RateLimit-Remaining": {
+                "description": "Remaining requests in the current minute window.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 60
+                }
+              },
+              "RateLimit-Reset": {
+                "description": "Seconds until the current minute window resets.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                }
+              },
+              "Retry-After": {
+                "description": "Seconds to wait before retrying a rate-limited request.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
                 }
               }
             }
@@ -699,5 +1241,9 @@
         }
       }
     }
+  },
+  "externalDocs": {
+    "description": "TechnoRapper API versioning and deprecation policy",
+    "url": "https://technorapper.com/api-versioning/"
   }
 }

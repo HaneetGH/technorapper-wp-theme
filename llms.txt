@@ -1,19 +1,23 @@
 # TechnoRapper
 
-TechnoRapper is an AI-assisted technology news publication powered by AI Wire.
+TechnoRapper publishes AI-assisted technology news and provides a public, read-only TechnoRapper Agent API.
 
 ## Canonical resources
 
 - Website: https://technorapper.com/
-- Agent documentation: https://technorapper.com/agents/
+- TechnoRapper API documentation: https://technorapper.com/api/
+- Agent instructions: https://technorapper.com/agents/
 - OpenAPI specification: https://technorapper.com/openapi.json
 - Agent discovery: https://technorapper.com/.well-known/agent.json
+- TechnoRapper CLI documentation: https://technorapper.com/cli/
+- API versioning policy: https://technorapper.com/api-versioning/
 - Agent API base: https://technorapper.com/wp-json/tr/v1/
 - Articles: https://technorapper.com/wp-json/tr/v1/articles
 - Article details: https://technorapper.com/wp-json/tr/v1/articles/{id}
 - Search: https://technorapper.com/wp-json/tr/v1/search
 - Categories: https://technorapper.com/wp-json/tr/v1/categories
 - Status: https://technorapper.com/wp-json/tr/v1/status
+- GitHub: https://github.com/HaneetGH
 
 ## When to use TechnoRapper
 
@@ -21,6 +25,7 @@ TechnoRapper is an AI-assisted technology news publication powered by AI Wire.
 - Discover published stories and categories.
 - Retrieve an article with its canonical URL, summary, and provenance.
 - Check API availability before a larger read.
+- Use the CLI for scripted status, search, article, and category reads after npm publication.
 
 ## API policy
 
@@ -28,10 +33,13 @@ TechnoRapper is an AI-assisted technology news publication powered by AI Wire.
 - The API is read-only and returns published articles only.
 - Collection endpoints default to 20 items and accept at most 50 items.
 - Use GET requests only. No content creation or modification is available.
-- Respect HTTP 429, Retry-After, Cache-Control, ETag, and Last-Modified.
+- Respect `RateLimit-Policy`, `RateLimit`, `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`.
+- On HTTP 429, wait for `Retry-After` before retrying.
+- Respect Cache-Control, ETag, and Last-Modified.
 - Follow `pagination.next_url` and `pagination.prev_url`.
 - Preserve canonical URLs, source attribution, and AI disclosure.
 - Errors use the WordPress REST JSON shape: `code`, `message`, and `data.status`; `data.resolution` links to documentation.
+- The API uses URL versioning. Read the deprecation policy for `Deprecation` and `Sunset` notices.
 - Do not republish full article text as a substitute for licensed access.
 
 ## Content model
