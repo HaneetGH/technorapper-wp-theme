@@ -179,6 +179,19 @@ function technorapper_agent_post($post)
     );
 }
 
+function technorapper_agent_page_url($request, $page)
+{
+    if (!($request instanceof WP_REST_Request)) {
+        return null;
+    }
+
+    $query_args = $request->get_query_params();
+    unset($query_args['rest_route']);
+    $query_args['page'] = (int) $page;
+
+    return add_query_arg($query_args, rest_url(ltrim($request->get_route(), '/')));
+}
+
 function technorapper_agent_collection_response($posts, $page, $per_page, $total, $request = null)
 {
     $items = array();
@@ -197,11 +210,11 @@ function technorapper_agent_collection_response($posts, $page, $per_page, $total
             'total'       => (int) $total,
             'total_pages' => $pages,
             'has_next'    => (int) $page < $pages,
-            'next_url'    => ($request instanceof WP_REST_Request && (int) $page < $pages)
-                ? add_query_arg(array('page' => (int) $page + 1), rest_url(ltrim($request->get_route(), '/')))
+            'next_url'    => (int) $page < $pages
+                ? technorapper_agent_page_url($request, (int) $page + 1)
                 : null,
-            'prev_url'    => ($request instanceof WP_REST_Request && (int) $page > 1)
-                ? add_query_arg(array('page' => (int) $page - 1), rest_url(ltrim($request->get_route(), '/')))
+            'prev_url'    => (int) $page > 1
+                ? technorapper_agent_page_url($request, (int) $page - 1)
                 : null,
         ),
         'meta' => array(
@@ -226,19 +239,22 @@ function technorapper_agent_articles($request)
         'order'          => 'DESC',
     );
 
-    $category = $request->get_param('category');
+    $category = sanitize_title((string) $request->get_param('category'));
     if ($category !== '') {
         $args['category_name'] = $category;
     }
 
-    $after = $request->get_param('after');
-    $before = $request->get_param('before');
+    $after = trim((string) $request->get_param('after'));
+    $before = trim((string) $request->get_param('before'));
     if ($after !== '' || $before !== '') {
-        $args['date_query'] = array(array(
-            'after'     => $after !== '' ? $after : null,
-            'before'    => $before !== '' ? $before : null,
-            'inclusive' => true,
-        ));
+        $date_query = array('inclusive' => true);
+        if ($after !== '') {
+            $date_query['after'] = $after;
+        }
+        if ($before !== '') {
+            $date_query['before'] = $before;
+        }
+        $args['date_query'] = array($date_query);
     }
 
     $query = new WP_Query($args);
