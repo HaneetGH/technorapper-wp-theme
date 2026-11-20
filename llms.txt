@@ -1,0 +1,36 @@
+# TechnoRapper
+
+TechnoRapper is an AI-assisted technology news publication powered by AI Wire.
+
+## Canonical resources
+
+- Website: https://technorapper.com/
+- Agent documentation: https://technorapper.com/agents/
+- Agent API: https://technorapper.com/wp-json/tr/v1/
+- Articles: https://technorapper.com/wp-json/tr/v1/articles
+- Search: https://technorapper.com/wp-json/tr/v1/search
+- Categories: https://technorapper.com/wp-json/tr/v1/categories
+- RSS: https://technorapper.com/feed/
+- Agent discovery: https://technorapper.com/.well-known/agent.json
+
+## Agent usage
+
+The public Agent API is read-only. Prefer the API over HTML scraping.
+
+- Default page size: 20
+- Maximum page size: 50
+- Respect HTTP 429 responses.
+- Respect Cache-Control and ETag headers.
+- Preserve canonical URLs.
+- Preserve source attribution and AI disclosure.
+- Do not republish full article text as a substitute for licensed access.
+
+## Content model
+
+Articles expose stable TechnoRapper IDs, canonical URLs, publication/update timestamps, summaries, categories, authors and provenance metadata.
+
+TechnoRapper may use AI-assisted processing and curation through AI Wire. Source attribution remains part of the article provenance.
+
+## Contact
+
+For licensing, corrections, partnerships or high-volume API access, use the published Contact page on the website.

@@ -5,6 +5,9 @@ if (!defined('ABSPATH')) {
 
 require_once __DIR__ . '/inc/ai-disclosure.php';
 require_once __DIR__ . '/inc/indexing.php';
+require_once __DIR__ . '/inc/agent-api.php';
+require_once __DIR__ . '/inc/agent-discovery.php';
+require_once __DIR__ . '/inc/agent-schema.php';
 
 function technorapper_setup()
 {
