@@ -86,19 +86,44 @@ function technorapper_agent_api_register()
 }
 add_action('rest_api_init', 'technorapper_agent_api_register');
 
+function technorapper_agent_rate_limit_header_values($remaining, $reset)
+{
+    $remaining = max(0, min(60, (int) $remaining));
+    $reset = max(1, (int) $reset);
+
+    return array(
+        'RateLimit-Policy'     => '"default";q=60;w=60',
+        'RateLimit'            => '"default";r=' . $remaining . ';t=' . $reset,
+        'RateLimit-Limit'      => '60;w=60',
+        'RateLimit-Remaining'  => (string) $remaining,
+        'RateLimit-Reset'      => (string) $reset,
+    );
+}
+
 function technorapper_agent_rate_limit()
 {
     $ip = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : 'unknown';
     $bucket = 'tr_agent_' . md5($ip . '|' . gmdate('YmdHi'));
     $count = (int) get_transient($bucket);
+    $reset = max(1, 60 - ((int) time() % 60));
+
     if ($count >= 60) {
+        $GLOBALS['technorapper_agent_rate_limit_state'] = array(
+            'remaining' => 0,
+            'reset' => $reset,
+        );
         return new WP_Error(
             'tr_agent_rate_limited',
             'Too many requests. Please retry shortly.',
-            array('status' => 429, 'retry_after' => 60)
+            array('status' => 429, 'retry_after' => $reset)
         );
     }
+
     set_transient($bucket, $count + 1, 70);
+    $GLOBALS['technorapper_agent_rate_limit_state'] = array(
+        'remaining' => max(0, 59 - $count),
+        'reset' => $reset,
+    );
     return true;
 }
 
@@ -115,7 +140,7 @@ function technorapper_agent_error_response_data($data, $status)
         $data['data']['status'] = (int) $status;
     }
     $data['data']['resolution'] = array(
-        'documentation' => home_url('/agents/'),
+        'documentation' => home_url('/api/'),
         'openapi'       => home_url('/openapi.json'),
     );
 
@@ -125,10 +150,17 @@ function technorapper_agent_error_response_data($data, $status)
 function technorapper_agent_headers($response, $server, $request)
 {
     if ($response instanceof WP_REST_Response && strpos($request->get_route(), '/tr/v1/') === 0) {
-        $response->header('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+        $response->header('Cache-Control', 'private, no-cache, must-revalidate');
         $response->header('X-Robots-Tag', 'noindex, nofollow');
         $response->header('X-Content-Type-Options', 'nosniff');
         $response->header('Vary', 'Accept-Encoding');
+
+        $rate_state = isset($GLOBALS['technorapper_agent_rate_limit_state']) && is_array($GLOBALS['technorapper_agent_rate_limit_state'])
+            ? $GLOBALS['technorapper_agent_rate_limit_state']
+            : array('remaining' => 0, 'reset' => 60);
+        foreach (technorapper_agent_rate_limit_header_values($rate_state['remaining'], $rate_state['reset']) as $header_name => $header_value) {
+            $response->header($header_name, $header_value);
+        }
 
         $status = (int) $response->get_status();
         if ($status >= 400) {

@@ -73,7 +73,7 @@ jobs:
           set -euo pipefail
           rm -rf dist
           mkdir -p dist/technorapper
-          rsync -a --delete --exclude='.git/' --exclude='.github/' --exclude='dist/' --exclude='*.zip' --exclude='screenshot.png' ./ dist/technorapper/
+          rsync -a --delete --exclude='.git/' --exclude='.github/' --exclude='cli/' --exclude='dist/' --exclude='*.zip' --exclude='screenshot.png' ./ dist/technorapper/
           (cd dist && zip -r "../technorapper-${{ steps.theme.outputs.version }}.zip" technorapper)
           sha256sum "technorapper-${{ steps.theme.outputs.version }}.zip" > "technorapper-${{ steps.theme.outputs.version }}.zip.sha256"
 

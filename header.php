@@ -7,7 +7,7 @@
   <?php
   add_filter('pre_get_document_title', function ($title) {
       if (is_front_page()) {
-          return 'TechnoRapper — AI Agent Tech News';
+          return 'TechnoRapper — AI Tech News & Agent API';
       }
       if (is_singular('post')) {
           return get_the_title() . ' | TechnoRapper — AI Agent Tech News';

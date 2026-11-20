@@ -3,7 +3,11 @@
   <div class="wrap">
     <nav aria-label="Footer">
       <a href="<?php echo esc_url(home_url('/')); ?>">Home</a>
-      <a href="<?php echo esc_url(home_url('/agents/')); ?>">Agent documentation</a>
+      <a href="<?php echo esc_url(home_url('/api/')); ?>">TechnoRapper API docs</a>
+      <a href="<?php echo esc_url(home_url('/agents/')); ?>">Agent instructions</a>
+      <a href="<?php echo esc_url(home_url('/cli/')); ?>">TechnoRapper CLI</a>
+      <a href="<?php echo esc_url(home_url('/api-versioning/')); ?>">API versioning</a>
+      <a href="https://github.com/HaneetGH">GitHub</a>
       <a href="<?php echo esc_url(home_url('/openapi.json')); ?>">OpenAPI specification</a>
       <?php
       foreach (technorapper_desks() as $desk) {
