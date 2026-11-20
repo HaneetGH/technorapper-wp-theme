@@ -76,6 +76,7 @@ function technorapper_agent_discovery()
         echo '<li><a href="' . esc_url(home_url('/llms.txt')) . '">llms.txt</a></li>';
         echo '<li><a href="' . esc_url(home_url('/.well-known/agent.json')) . '">agent.json</a></li>';
         echo '</ul><h2>Usage</h2><ul><li>Published articles only.</li><li>Stable IDs use the <code>tr-&lt;wordpress_id&gt;</code> format.</li><li>Collection responses include <code>pagination.next_url</code> and <code>pagination.prev_url</code>.</li><li>Article responses expose HTML and plain-text content plus provenance metadata.</li><li>Clients should respect 429 responses, Cache-Control, ETag and canonical/source attribution.</li></ul><p>The API is read-only and never provides WordPress write capabilities.</p></main></body></html>'
+        echo '</ul><h2>Usage</h2><ul><li>Published articles only.</li><li>Stable IDs use the <code>tr-&lt;wordpress_id&gt;</code> format.</li><li>Collection responses include <code>pagination.next_url</code> and <code>pagination.prev_url</code>.</li><li>Article responses expose HTML and plain-text content plus provenance metadata.</li><li>Clients should respect 429 responses, Cache-Control, ETag and canonical/source attribution.</li></ul><p>The API is read-only and never provides WordPress write capabilities.</p></main></body></html>';
         exit;
     }
 }
