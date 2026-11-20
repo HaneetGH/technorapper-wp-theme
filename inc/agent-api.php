@@ -29,7 +29,9 @@ function technorapper_agent_api_register()
             ),
             'category' => array(
                 'default'           => '',
-                'sanitize_callback' => 'sanitize_title',
+                'sanitize_callback' => function ($value) {
+                    return sanitize_title(is_scalar($value) ? (string) $value : '');
+                },
             ),
             'after' => array(
                 'default'           => '',
