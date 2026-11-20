@@ -95,6 +95,8 @@ function technorapper_agent_home_markdown()
         . "- TechnoRapper API documentation: " . home_url('/api/') . "\n"
         . "- Agent guide: " . home_url('/agents/') . "\n"
         . "- OpenAPI specification: " . home_url('/openapi.json') . "\n"
+        . "- Article collection: " . rest_url('tr/v1/articles') . "\n"
+        . "- Search: " . rest_url('tr/v1/search') . "\n"
         . "- Agent discovery: " . home_url('/.well-known/agent.json') . "\n"
         . "- llms.txt: " . home_url('/llms.txt') . "\n"
         . "- TechnoRapper CLI: " . home_url('/cli/') . "\n"

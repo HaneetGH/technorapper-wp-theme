@@ -110,10 +110,13 @@ tr_ar_assert(!technorapper_agent_is_home_request('/?rest_route=/wp/v2/posts'), '
 tr_ar_assert(!technorapper_agent_is_home_request('/?feed=rss2'), 'feeds are not treated as the homepage');
 $_SERVER['REQUEST_URI'] = '/';
 $home_headers = technorapper_agent_home_vary_headers(array('Vary' => 'Accept-Encoding'));
-tr_ar_assert(stripos($home_headers['Vary'], 'Accept') !== false, 'homepage response varies by Accept');
+$home_vary_tokens = array_map('strtolower', array_map('trim', explode(',', $home_headers['Vary'])));
+tr_ar_assert(in_array('accept', $home_vary_tokens, true), 'homepage response varies by Accept');
+tr_ar_assert(in_array('accept-encoding', $home_vary_tokens, true), 'homepage Vary preserves Accept-Encoding');
 $_SERVER['REQUEST_URI'] = '/?s=iphone';
 $search_headers = technorapper_agent_home_vary_headers(array('Vary' => 'Accept-Encoding'), null);
-tr_ar_assert(stripos($search_headers['Vary'], 'Accept') === false, 'search response is not varied as homepage content');
+$search_vary_tokens = array_map('strtolower', array_map('trim', explode(',', $search_headers['Vary'])));
+tr_ar_assert(!in_array('accept', $search_vary_tokens, true), 'search response is not varied as homepage content');
 unset($_SERVER['REQUEST_URI']);
 tr_ar_assert(technorapper_agent_select_representation('/', 'text/markdown', false, false) === 'markdown-home', 'homepage negotiates Markdown for an explicit Accept header');
 tr_ar_assert(technorapper_agent_select_representation('/', 'text/html', false, true) === null, 'HTML Accept keeps the homepage HTML representation');
@@ -136,7 +139,7 @@ tr_ar_contains($home_markdown, '# TechnoRapper', 'homepage Markdown identifies t
 tr_ar_contains($home_markdown, 'OpenAPI specification', 'homepage Markdown links the API schema');
 tr_ar_contains($home_markdown, 'Article collection', 'homepage Markdown links the article API');
 tr_ar_assert(strlen(technorapper_agent_404_markdown_body()) > 80, 'Markdown 404 gives a useful explanation');
-tr_ar_contains(technorapper_agent_404_markdown_body(), 'Agent documentation', 'Markdown 404 links agent documentation');
+tr_ar_contains(technorapper_agent_404_markdown_body(), 'TechnoRapper API documentation', 'Markdown 404 links developer documentation');
 tr_ar_contains(technorapper_agent_404_markdown_body(), 'llms.txt', 'Markdown 404 links discovery instructions');
 
 $document = technorapper_agent_openapi_document();
