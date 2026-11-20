@@ -60,7 +60,7 @@ function technorapper_agent_discovery()
         exit;
     }
 
-    if ($path === '/agents/') {
+    if ($path === '/agents') {
         header('Cache-Control: public, max-age=3600');
         header('X-Content-Type-Options: nosniff');
         header('Content-Type: text/html; charset=utf-8');
