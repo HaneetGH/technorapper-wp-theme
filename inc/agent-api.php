@@ -100,11 +100,11 @@ function technorapper_agent_rate_limit()
     return true;
 }
 
-function technorapper_agent_headers($response)
+function technorapper_agent_headers($response, $server, $request)
 {
-    if ($response instanceof WP_REST_Response) {
+    if ($response instanceof WP_REST_Response && strpos($request->get_route(), '/tr/v1/') === 0) {
         $response->header('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
-        $response->header('X-Robots-Tag', 'index, follow');
+        $response->header('X-Robots-Tag', 'noindex, nofollow');
         $response->header('X-Content-Type-Options', 'nosniff');
         $response->header('Vary', 'Accept-Encoding');
     }
@@ -179,7 +179,7 @@ function technorapper_agent_post($post)
     );
 }
 
-function technorapper_agent_collection_response($posts, $page, $per_page, $total)
+function technorapper_agent_collection_response($posts, $page, $per_page, $total, $request = null)
 {
     $items = array();
     foreach ($posts as $post) {
@@ -197,6 +197,12 @@ function technorapper_agent_collection_response($posts, $page, $per_page, $total
             'total'       => (int) $total,
             'total_pages' => $pages,
             'has_next'    => (int) $page < $pages,
+            'next_url'    => ($request instanceof WP_REST_Request && (int) $page < $pages)
+                ? add_query_arg(array('page' => (int) $page + 1), rest_url(ltrim($request->get_route(), '/')))
+                : null,
+            'prev_url'    => ($request instanceof WP_REST_Request && (int) $page > 1)
+                ? add_query_arg(array('page' => (int) $page - 1), rest_url(ltrim($request->get_route(), '/')))
+                : null,
         ),
         'meta' => array(
             'api_version' => '1',
@@ -240,7 +246,8 @@ function technorapper_agent_articles($request)
         $query->posts,
         $page,
         $per_page,
-        (int) $query->found_posts
+        (int) $query->found_posts,
+        $request
     );
 }
 
@@ -263,6 +270,14 @@ function technorapper_agent_article($request)
 
     $etag = '"' . md5($data['id'] . '|' . $data['updated_at']) . '"';
     $response->header('ETag', $etag);
+    $response->header('Last-Modified', gmdate('D, d M Y H:i:s', strtotime($data['updated_at'])) . ' GMT');
+    $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim(wp_unslash($_SERVER['HTTP_IF_NONE_MATCH'])) : '';
+    if ($if_none_match === $etag) {
+        $not_modified = new WP_REST_Response(null, 304);
+        $not_modified->header('ETag', $etag);
+        $not_modified->header('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+        return $not_modified;
+    }
     return $response;
 }
 
@@ -285,7 +300,8 @@ function technorapper_agent_search($request)
         $query->posts,
         $page,
         $per_page,
-        (int) $query->found_posts
+        (int) $query->found_posts,
+        $request
     );
 }
 
